@@ -1,0 +1,5 @@
+/imovel/:slug             /index.html                    200
+/lancamento/:slug         /index.html                    200
+/politica-de-privacidade  /politica-de-privacidade.html  200
+/portal-locatario         /portal-locatario.html         200
+/portal-proprietario      /portal-proprietario.html      200

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /treinamento/
+
+Sitemap: https://gregoriomeular-site.netlify.app/sitemap.xml

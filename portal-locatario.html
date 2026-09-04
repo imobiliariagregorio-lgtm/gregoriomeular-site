@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google tag (Analytics GA4 + Google Ads) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G29NGFN2ZF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-G29NGFN2ZF');
+  gtag('config', 'AW-10887243194');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '480291410458503');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=480291410458503&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<title>Portal do Locatário — Gregório | Meu Lar</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="/assets/logo-header.png">
+<link rel="apple-touch-icon" href="/assets/logo-header.png">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header" id="header">
+  <div class="container header-inner">
+    <a href="/" class="logo">
+      <img src="/assets/logo-header.png" alt="Gregório | Meu Lar" class="logo-mark-img">
+      <span class="logo-text">Gregório <strong>| Meu Lar</strong></span>
+    </a>
+    <span class="portal-title-tag">Portal do Locatário</span>
+    <a href="/" class="btn btn-ghost nav-cta">Voltar ao site</a>
+  </div>
+</header>
+
+<main class="portal-main">
+  <div class="container">
+
+    <!-- ============ LOGIN ============ -->
+    <section class="portal-login-wrap" id="loginWrap">
+      <form class="lead-form portal-login-card" id="loginForm">
+        <div class="portal-login-head">
+          <img src="/assets/logo-header.png" alt="" class="logo-mark-img">
+          <h1>Portal do Locatário</h1>
+          <p>Veja o valor do seu aluguel e o histórico de pagamentos.</p>
+        </div>
+        <div class="form-row">
+          <label for="login-email">E-mail</label>
+          <input required type="email" id="login-email" placeholder="voce@email.com">
+        </div>
+        <div class="form-row">
+          <label for="login-senha">Senha</label>
+          <input required type="password" id="login-senha" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Entrar</button>
+        <p class="form-feedback" id="loginError" hidden></p>
+        <button type="button" class="link-btn" id="forgotBtn">Esqueci minha senha</button>
+      </form>
+
+      <form class="lead-form portal-login-card" id="forgotForm" hidden>
+        <div class="portal-login-head">
+          <img src="/assets/logo-header.png" alt="" class="logo-mark-img">
+          <h1>Recuperar senha</h1>
+          <p>Digite seu e-mail cadastrado para receber o link de redefinição.</p>
+        </div>
+        <div class="form-row">
+          <label for="forgot-email">E-mail</label>
+          <input required type="email" id="forgot-email" placeholder="voce@email.com">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="forgotBtnSubmit">Enviar link</button>
+        <p class="form-feedback" id="forgotFeedback" hidden></p>
+        <button type="button" class="link-btn" id="backToLoginBtn">Voltar para o login</button>
+      </form>
+
+      <p class="portal-help">Ainda não tem acesso? Fale com seu corretor da Gregório | Meu Lar para liberar o login.</p>
+    </section>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="portal-dashboard" id="dashboard" hidden>
+      <div class="portal-dash-head">
+        <div>
+          <p class="eyebrow">Bem-vindo(a)</p>
+          <h1 id="tenantName">—</h1>
+        </div>
+        <button class="btn btn-outline" id="logoutBtn">Sair</button>
+      </div>
+
+      <div id="noContractMsg" class="empty-state" hidden>Nenhum contrato de locação ativo encontrado para o seu usuário.</div>
+
+      <div id="contractsWrap"></div>
+
+    </section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <span class="logo-text">GREGÓRIO <strong>| MEU LAR IMÓVEIS</strong></span>
+      <p>Especialistas na conquista da sua casa própria.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/">Site</a>
+      <a href="/portal-proprietario">Portal do Proprietário</a>
+      <a href="https://gregoriomeular-crm.netlify.app" target="_blank" rel="noopener">CRM</a>
+    </div>
+  </div>
+  <p class="footer-copy">© <span id="year"></span> Gregório | Meu Lar Imobiliária. Todos os direitos reservados.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/js/supabase-client.js"></script>
+<script src="/js/portal-locatario.js"></script>
+</body>
+</html>

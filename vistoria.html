@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Vistoria — Gregório | Meu Lar</title>
+<link rel="icon" type="image/png" href="/assets/logo-header.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F2D52; --navy-dark:#081D38; --orange:#F58220; --orange-dark:#D9700F;
+    --bg:#F5F7FB; --surface:#FFFFFF; --border:#E6EAF1; --text:#12233F; --gray-text:#5C6B82;
+    --font-display:'Montserrat',sans-serif; --font-body:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:var(--font-body); background:var(--bg); color:var(--text); line-height:1.55;}
+  .topbar{background:var(--navy); color:#fff; padding:20px 20px 24px;}
+  .topbar-inner{max-width:720px; margin:0 auto;}
+  .topbar-eyebrow{font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; opacity:.75; margin:0 0 4px;}
+  .topbar-title{font-family:var(--font-display); font-weight:800; font-size:1.25rem; margin:0;}
+  .wrap{max-width:720px; margin:0 auto; padding:20px 16px 60px;}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 20px; margin-bottom:16px; box-shadow:0 1px 2px rgba(15,45,82,.05), 0 10px 26px -16px rgba(15,45,82,.22);}
+  .card h2{font-family:var(--font-display); font-size:1rem; color:var(--navy); margin:0 0 10px;}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px 18px; font-size:.86rem; color:var(--gray-text); margin-bottom:2px;}
+  .meta-row b{color:var(--text);}
+  .badge{display:inline-block; font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:999px; background:#FFF3E8; color:var(--orange-dark);}
+  .badge.ok{background:#EAFBF2; color:#1f9d58;}
+  .item-checklist{border-top:1px solid var(--border); padding:10px 0; font-size:.9rem;}
+  .item-checklist:first-child{border-top:none;}
+  .item-checklist .linha1{display:flex; justify-content:space-between; gap:10px; font-weight:600;}
+  .item-checklist .cond{font-weight:400; color:var(--gray-text); font-size:.82rem;}
+  .item-checklist .obs{color:var(--gray-text); font-size:.84rem; margin-top:3px;}
+  .fotos-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .fotos-grid img{width:100%; height:140px; object-fit:cover; border-radius:10px; border:1px solid var(--border); cursor:pointer;}
+  @media (min-width:520px){ .fotos-grid{grid-template-columns:1fr 1fr 1fr;} .fotos-grid img{height:120px;} }
+  .laudo-final{white-space:pre-wrap; font-size:.9rem;}
+  .estado-vazio{color:var(--gray-text); font-size:.88rem;}
+  .lightbox{display:none; position:fixed; inset:0; background:rgba(8,29,56,.92); z-index:50; align-items:center; justify-content:center; padding:20px;}
+  .lightbox.aberto{display:flex;}
+  .lightbox img{max-width:100%; max-height:90vh; border-radius:8px;}
+  .lightbox-fechar{position:absolute; top:16px; right:20px; color:#fff; font-size:2rem; background:none; border:none; cursor:pointer; line-height:1;}
+  footer{text-align:center; font-size:.76rem; color:var(--gray-text); padding:0 16px 30px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <p class="topbar-eyebrow">Gregório | Meu Lar Imóveis</p>
+    <h1 class="topbar-title" id="tituloImovel">Carregando vistoria...</h1>
+  </div>
+</div>
+
+<div class="wrap" id="conteudo">
+  <div class="card"><p class="estado-vazio">Carregando informações da vistoria...</p></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-fechar" id="lightboxFechar">&times;</button>
+  <img id="lightboxImg" src="" alt="Foto da vistoria em tamanho maior">
+</div>
+
+<footer>Gregório | Meu Lar Imóveis — este link mostra apenas os dados desta vistoria específica.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabase-client.js"></script>
+<script>
+(async function () {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const conteudo = document.getElementById('conteudo');
+  const tituloEl = document.getElementById('tituloImovel');
+
+  function erro(msg) {
+    tituloEl.textContent = 'Vistoria não encontrada';
+    conteudo.innerHTML = `<div class="card"><p class="estado-vazio">${msg}</p></div>`;
+  }
+
+  if (!id) { erro('Link incompleto — falta o identificador da vistoria.'); return; }
+
+  const { data: v, error: erroV } = await supabase
+    .from('vistorias')
+    .select('*, imoveis(titulo, endereco, numero, bairro, cidade, estado)')
+    .eq('id', id)
+    .single();
+
+  if (erroV || !v) {
+    erro('Não encontramos essa vistoria, ou ela ainda não foi concluída. Se você acabou de receber esse link, aguarde a imobiliária finalizar a vistoria.');
+    return;
+  }
+
+  const endereco = [v.imoveis?.endereco, v.imoveis?.numero, v.imoveis?.bairro, v.imoveis?.cidade, v.imoveis?.estado].filter(Boolean).join(', ');
+  tituloEl.textContent = v.imoveis?.titulo || 'Vistoria';
+
+  const tipoLabel = { entrada: 'Vistoria de entrada', saida: 'Vistoria de saída' }[v.tipo] || v.tipo;
+  const dataVistoria = v.data_realizada || v.data_agendada;
+  const dataFormatada = dataVistoria ? new Date(dataVistoria).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : null;
+
+  const [{ data: itens }, { data: fotos }] = await Promise.all([
+    supabase.from('vistoria_itens').select('*').eq('vistoria_id', id).order('criado_em'),
+    supabase.from('vistoria_fotos').select('*').eq('vistoria_id', id).order('criado_em'),
+  ]);
+
+  const blocoInfo = `
+    <div class="card">
+      <div class="meta-row">
+        <span class="badge ok">${tipoLabel}</span>
+        ${dataFormatada ? `<span><b>Data:</b> ${dataFormatada}</span>` : ''}
+        ${v.estado_geral ? `<span><b>Estado geral:</b> ${v.estado_geral}</span>` : ''}
+      </div>
+      ${endereco ? `<p class="meta-row" style="margin-top:8px;">${endereco}</p>` : ''}
+    </div>`;
+
+  const blocoFotos = fotos && fotos.length ? `
+    <div class="card">
+      <h2>📷 Fotos (${fotos.length})</h2>
+      <div class="fotos-grid">
+        ${fotos.map((f) => `<img src="${f.url}" alt="Foto da vistoria" loading="lazy" data-full="${f.url}">`).join('')}
+      </div>
+    </div>` : '';
+
+  const blocoChecklist = itens && itens.length ? `
+    <div class="card">
+      <h2>Checklist por ambiente</h2>
+      ${itens.map((it) => `
+        <div class="item-checklist">
+          <div class="linha1"><span>${it.ambiente} — ${it.item}</span><span class="cond">${it.condicao || '—'}</span></div>
+          ${it.observacao ? `<div class="obs">${it.observacao}</div>` : ''}
+        </div>
+      `).join('')}
+    </div>` : '';
+
+  const blocoLaudo = v.laudo_final ? `
+    <div class="card">
+      <h2>Laudo final</h2>
+      <p class="laudo-final">${v.laudo_final}</p>
+    </div>` : '';
+
+  conteudo.innerHTML = blocoInfo + blocoFotos + blocoChecklist + blocoLaudo;
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  conteudo.addEventListener('click', (e) => {
+    const img = e.target.closest('.fotos-grid img');
+    if (!img) return;
+    lightboxImg.src = img.dataset.full;
+    lightbox.classList.add('aberto');
+  });
+  document.getElementById('lightboxFechar').addEventListener('click', () => lightbox.classList.remove('aberto'));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('aberto'); });
+})();
+</script>
+
+</body>
+</html>
