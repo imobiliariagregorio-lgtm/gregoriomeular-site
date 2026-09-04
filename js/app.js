@@ -808,12 +808,18 @@ $('#searchForm').addEventListener('submit', (e) => {
   const finalidade = $('#f-finalidade').value;
   const tipo = $('#f-tipo').value;
   const busca = $('#f-bairro').value;
+  const quartos = $('#f-quartos').value;
+  const precoMin = $('#f-preco-min').value;
+  const precoMax = $('#f-preco-max').value;
 
   $('#lf-finalidade').value = finalidade;
   $('#lf-tipo').value = tipo;
   $('#lf-busca').value = busca;
+  $('#lf-quartos').value = quartos;
+  $('#lf-preco-min').value = precoMin;
+  $('#lf-preco-max').value = precoMax;
 
-  loadListagem({ finalidade, tipo, busca });
+  loadListagem({ finalidade, tipo, busca, quartos, precoMin, precoMax });
   $('#imoveis').scrollIntoView({ behavior: 'smooth' });
 });
 
