@@ -635,6 +635,10 @@ async function loadListagem(filters = {}) {
 
   if (filters.finalidade) query = query.in('finalidade', [filters.finalidade, 'venda_locacao']);
   if (filters.tipo) query = query.eq('tipo', filters.tipo);
+  if (filters.cidade) query = query.ilike('cidade', filters.cidade);
+  if (filters.quartos) query = query.gte('quartos', Number(filters.quartos));
+  if (filters.precoMin) query = query.or(`valor_venda.gte.${filters.precoMin},valor_locacao.gte.${filters.precoMin}`);
+  if (filters.precoMax) query = query.or(`valor_venda.lte.${filters.precoMax},valor_locacao.lte.${filters.precoMax}`);
   if (filters.busca) query = aplicarBuscaTexto(query, filters.busca);
   else if (filters.bairro) query = query.or(`bairro.ilike.%${filters.bairro}%,cidade.ilike.%${filters.bairro}%`);
   if (filters.mcmv) query = query.eq('elegivel_mcmv', true);
@@ -653,13 +657,17 @@ function currentListFilters() {
     busca: $('#lf-busca').value,
     finalidade: $('#lf-finalidade').value,
     tipo: $('#lf-tipo').value,
+    cidade: $('#lf-cidade').value,
+    quartos: $('#lf-quartos').value,
+    precoMin: $('#lf-preco-min').value,
+    precoMax: $('#lf-preco-max').value,
     mcmv: $('#lf-mcmv').checked,
     luxo: $('#lf-luxo').checked,
     lancamento: $('#lf-lancamento').checked,
   };
 }
 
-['#lf-finalidade', '#lf-tipo', '#lf-mcmv', '#lf-luxo', '#lf-lancamento'].forEach((sel) => {
+['#lf-finalidade', '#lf-tipo', '#lf-cidade', '#lf-quartos', '#lf-mcmv', '#lf-luxo', '#lf-lancamento'].forEach((sel) => {
   $(sel).addEventListener('change', () => loadListagem(currentListFilters()));
 });
 
@@ -669,9 +677,22 @@ $('#lf-busca').addEventListener('input', () => {
   debounceLfBusca = setTimeout(() => loadListagem(currentListFilters()), 350);
 });
 
+let debounceLfPreco;
+['#lf-preco-min', '#lf-preco-max'].forEach((sel) => {
+  $(sel).addEventListener('input', () => {
+    clearTimeout(debounceLfPreco);
+    debounceLfPreco = setTimeout(() => loadListagem(currentListFilters()), 500);
+  });
+});
+
 $('#clearFilters').addEventListener('click', () => {
   $('#lf-finalidade').value = '';
   $('#lf-tipo').value = '';
+  $('#lf-cidade').value = '';
+  $('#lf-quartos').value = '';
+  $('#lf-preco-min').value = '';
+  $('#lf-preco-max').value = '';
+  $('#lf-busca').value = '';
   $('#lf-mcmv').checked = false;
   $('#lf-luxo').checked = false;
   $('#lf-lancamento').checked = false;
