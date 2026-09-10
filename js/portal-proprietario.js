@@ -113,6 +113,7 @@ async function carregarRepasses(pessoaId) {
       <div class="portal-contract-block">
         <h3>${contrato.imoveis ? contrato.imoveis.titulo : 'Imóvel'} <span class="status-pill status-${contrato.status}">${contrato.status}</span></h3>
         <p class="portal-item-sub">${contrato.imoveis ? [contrato.imoveis.endereco, contrato.imoveis.bairro].filter(Boolean).join(', ') : ''}</p>
+        <p class="portal-item-sub"><strong>Aluguel:</strong> ${fmtMoney(Number(contrato.valor))}/mês · <strong>Renovação do contrato:</strong> ${contrato.data_fim ? new Date(contrato.data_fim + 'T00:00:00').toLocaleDateString('pt-BR') : 'sem data definida'}</p>
         <div class="table-wrap">
           <table class="portal-table">
             <thead><tr><th>Referência</th><th>Aluguel bruto</th><th>Taxa adm.</th><th>Repasse líquido</th><th>Status</th></tr></thead>
