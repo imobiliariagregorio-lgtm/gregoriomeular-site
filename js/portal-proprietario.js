@@ -15,13 +15,14 @@ async function init() {
 }
 
 async function carregarPessoaEDashboard(session) {
-  const { data: pessoa, error } = await supabase
+  const { data: pessoas, error } = await supabase
     .from('pessoas')
     .select('*')
-    .eq('auth_user_id', session.user.id)
-    .maybeSingle();
+    .eq('auth_user_id', session.user.id);
 
-  if (error || !pessoa || !(pessoa.papeis || []).includes('proprietario')) {
+  const proprietarios = (pessoas || []).filter((p) => (p.papeis || []).includes('proprietario'));
+
+  if (error || !proprietarios.length) {
     mostrarErroLogin('Este login não está liberado para o Portal do Proprietário. Fale com seu corretor.');
     await supabase.auth.signOut();
     return;
@@ -29,16 +30,19 @@ async function carregarPessoaEDashboard(session) {
 
   $('#loginWrap').hidden = true;
   $('#dashboard').hidden = false;
-  $('#ownerName').textContent = pessoa.nome;
+  // Um mesmo login pode reunir mais de uma pessoa (ex: mãe e filha donas de imóveis em conjunto) —
+  // mostra os dois nomes quando for o caso.
+  $('#ownerName').textContent = proprietarios.map((p) => p.nome).join(' & ');
 
-  await Promise.all([carregarImoveis(pessoa.id), carregarRepasses(pessoa.id)]);
+  const pessoaIds = proprietarios.map((p) => p.id);
+  await Promise.all([carregarImoveis(pessoaIds), carregarRepasses(pessoaIds)]);
 }
 
-async function carregarImoveis(pessoaId) {
+async function carregarImoveis(pessoaIds) {
   const { data: imoveis } = await supabase
     .from('imoveis')
     .select('*')
-    .eq('proprietario_id', pessoaId)
+    .in('proprietario_id', pessoaIds)
     .order('criado_em', { ascending: false });
 
   const list = $('#imoveisList');
@@ -63,11 +67,11 @@ async function carregarImoveis(pessoaId) {
   `).join('');
 }
 
-async function carregarRepasses(pessoaId) {
+async function carregarRepasses(pessoaIds) {
   const { data: contratos } = await supabase
     .from('contratos')
     .select('*, imoveis(titulo, endereco, bairro)')
-    .eq('vendedor_locador_id', pessoaId)
+    .in('vendedor_locador_id', pessoaIds)
     .eq('tipo', 'locacao')
     .order('data_inicio', { ascending: false });
 
