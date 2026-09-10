@@ -43,6 +43,8 @@ async function carregarImoveis(pessoaIds) {
     .from('imoveis')
     .select('*')
     .in('proprietario_id', pessoaIds)
+    .eq('finalidade', 'locacao')
+    .eq('status', 'alugado')
     .order('criado_em', { ascending: false });
 
   const list = $('#imoveisList');
@@ -73,28 +75,30 @@ async function carregarRepasses(pessoaIds) {
     .select('*, imoveis(titulo, endereco, bairro)')
     .in('vendedor_locador_id', pessoaIds)
     .eq('tipo', 'locacao')
+    .eq('status', 'ativo')
     .order('data_inicio', { ascending: false });
 
   const wrap = $('#repassesWrap');
-  const contratosAtivos = (contratos || []).filter(c => c.status === 'ativo');
+  const contratosAtivos = contratos || [];
   $('#statContratosAtivos').textContent = contratosAtivos.length;
 
   if (!contratos || contratos.length === 0) {
-    wrap.innerHTML = '<p class="empty-state">Nenhum contrato de locação encontrado para o seu cadastro.</p>';
+    wrap.innerHTML = '<p class="empty-state">Nenhum contrato de locação ativo encontrado para o seu cadastro.</p>';
     $('#statUltimoRepasse').textContent = '—';
     return;
   }
 
   let ultimoRepasseTxt = '—';
   const blocks = [];
+  const dataMinima = '2026-07-01'; // histórico visível ao proprietário: julho de 2026 em diante
 
   for (const contrato of contratos) {
     const { data: cobrancas } = await supabase
       .from('cobrancas')
       .select('*')
       .eq('contrato_id', contrato.id)
-      .order('referencia', { ascending: false })
-      .limit(12);
+      .gte('referencia', dataMinima)
+      .order('referencia', { ascending: false });
 
     const taxa = Number(contrato.taxa_administracao_percentual || 0);
     const rows = (cobrancas || []).map(c => {
@@ -107,7 +111,6 @@ async function carregarRepasses(pessoaIds) {
         <tr>
           <td>${fmtMonth(c.referencia)}</td>
           <td>${fmtMoney(bruto)}</td>
-          <td>${taxa}%</td>
           <td><strong>${fmtMoney(liquido)}</strong></td>
           <td><span class="status-pill status-${c.status}">${STATUS_LABEL[c.status] || c.status}</span></td>
         </tr>`;
@@ -120,8 +123,8 @@ async function carregarRepasses(pessoaIds) {
         <p class="portal-item-sub"><strong>Aluguel:</strong> ${fmtMoney(Number(contrato.valor))}/mês · <strong>Renovação do contrato:</strong> ${contrato.data_fim ? new Date(contrato.data_fim + 'T00:00:00').toLocaleDateString('pt-BR') : 'sem data definida'}</p>
         <div class="table-wrap">
           <table class="portal-table">
-            <thead><tr><th>Referência</th><th>Aluguel bruto</th><th>Taxa adm.</th><th>Repasse líquido</th><th>Status</th></tr></thead>
-            <tbody>${rows || '<tr><td colspan="5" class="table-empty">Nenhuma cobrança lançada ainda.</td></tr>'}</tbody>
+            <thead><tr><th>Referência</th><th>Aluguel bruto</th><th>Repasse líquido</th><th>Status</th></tr></thead>
+            <tbody>${rows || '<tr><td colspan="4" class="table-empty">Nenhuma cobrança lançada desde julho.</td></tr>'}</tbody>
           </table>
         </div>
       </div>
