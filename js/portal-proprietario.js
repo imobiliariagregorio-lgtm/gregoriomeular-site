@@ -130,14 +130,12 @@ async function carregarRepasses(proprietarios) {
         ultimoRepasseTxt = fmtMoney(liquido);
       }
 
-      const linhasAjustes = ajustes.map((a) => {
+      const linhasAjustes = ajustes.filter((a) => (a.destino === 'proprietario') || (a.origem === 'proprietario')).map((a) => {
         const v = Number(a.valor) || 0;
-        const afetaProprietario = (a.destino === 'proprietario') || (a.origem === 'proprietario');
         const ehCredito = (a.tipo === 'acrescimo' && a.destino === 'proprietario') || (a.tipo === 'desconto' && a.destino === 'proprietario');
         const sinal = ehCredito ? '+' : '−';
-        const notaRetido = !afetaProprietario ? ' (retido pela imobiliária, não afeta seu repasse)' : '';
         return `<tr class="portal-ajuste-row">
-          <td colspan="2" class="portal-ajuste-desc">↳ ${a.descricao || (a.tipo === 'acrescimo' ? 'Acréscimo' : 'Desconto')}${notaRetido}</td>
+          <td colspan="2" class="portal-ajuste-desc">↳ ${a.descricao || (a.tipo === 'acrescimo' ? 'Acréscimo' : 'Desconto')}</td>
           <td class="${ehCredito ? 'portal-ajuste-credito' : 'portal-ajuste-debito'}">${sinal} ${fmtMoney(v)}</td>
           <td></td>
         </tr>`;
