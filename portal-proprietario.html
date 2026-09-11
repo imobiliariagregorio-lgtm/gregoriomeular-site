@@ -103,7 +103,27 @@
           <p class="eyebrow">Bem-vindo(a)</p>
           <h1 id="ownerName">—</h1>
         </div>
-        <button class="btn btn-outline" id="logoutBtn">Sair</button>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-outline" id="trocarSenhaBtn">Trocar senha</button>
+          <button class="btn btn-outline" id="logoutBtn">Sair</button>
+        </div>
+      </div>
+
+      <div class="portal-modal-overlay" id="trocarSenhaOverlay" hidden>
+        <div class="portal-modal">
+          <h2>Trocar senha</h2>
+          <form id="trocarSenhaForm">
+            <label>Nova senha</label>
+            <input type="password" id="nova-senha-1" required minlength="8" placeholder="Mínimo 8 caracteres">
+            <label>Confirme a nova senha</label>
+            <input type="password" id="nova-senha-2" required minlength="8">
+            <p class="portal-modal-erro" id="trocarSenhaErro" hidden></p>
+            <div class="portal-modal-acoes">
+              <button type="button" class="btn btn-outline" id="cancelarTrocarSenha">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Salvar nova senha</button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <div class="about-stats portal-stats">
