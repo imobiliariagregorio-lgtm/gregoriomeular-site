@@ -138,6 +138,7 @@ async function montarSecaoIR(proprietarios) {
     btn.disabled = false;
     btn.textContent = `Gerar relatório de ${anoAnterior}`;
   });
+}
 
 async function carregarImoveis(proprietarios) {
   const pessoaIds = proprietarios.map((p) => p.id);
