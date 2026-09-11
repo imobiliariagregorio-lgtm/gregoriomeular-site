@@ -198,4 +198,55 @@ $('#logoutBtn').addEventListener('click', async () => {
   window.location.reload();
 });
 
+// ==== Trocar senha (pelo botão no dashboard, ou automaticamente ao chegar pelo link de "Esqueci minha senha") ====
+function abrirModalTrocarSenha() {
+  $('#trocarSenhaErro').hidden = true;
+  $('#nova-senha-1').value = '';
+  $('#nova-senha-2').value = '';
+  $('#trocarSenhaOverlay').hidden = false;
+}
+$('#trocarSenhaBtn').addEventListener('click', abrirModalTrocarSenha);
+$('#cancelarTrocarSenha').addEventListener('click', () => { $('#trocarSenhaOverlay').hidden = true; });
+
+$('#trocarSenhaForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const erroEl = $('#trocarSenhaErro');
+  erroEl.hidden = true;
+
+  const senha1 = $('#nova-senha-1').value;
+  const senha2 = $('#nova-senha-2').value;
+  if (senha1 !== senha2) {
+    erroEl.textContent = 'As senhas digitadas são diferentes.';
+    erroEl.hidden = false;
+    return;
+  }
+
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Salvando...';
+
+  const { error } = await supabase.auth.updateUser({ password: senha1 });
+
+  btn.disabled = false;
+  btn.textContent = 'Salvar nova senha';
+
+  if (error) {
+    erroEl.textContent = 'Não foi possível trocar a senha: ' + error.message;
+    erroEl.hidden = false;
+    return;
+  }
+
+  $('#trocarSenhaOverlay').hidden = true;
+  alert('Senha alterada com sucesso!');
+});
+
+// Quando o proprietário clica no link de "Esqueci minha senha" recebido por e-mail, o Supabase abre
+// uma sessão temporária de recuperação e dispara este evento — abre direto o modal de nova senha,
+// em vez de simplesmente cair no dashboard sem trocar nada.
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    carregarPessoaEDashboard(session).then(abrirModalTrocarSenha);
+  }
+});
+
 init();
