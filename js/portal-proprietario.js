@@ -44,7 +44,17 @@ async function montarSecaoIR(proprietarios) {
   const pessoaIds = proprietarios.map((p) => p.id);
   const anoAnterior = new Date().getFullYear() - 1;
 
-  const { data: config } = await supabase.from('config_site').select('ir_declaracao_inicio, ir_declaracao_fim, razao_social, cnpj').eq('id', 1).maybeSingle();
+  let config;
+  try {
+    const resp = await supabase.from('config_site').select('ir_declaracao_inicio, ir_declaracao_fim, razao_social, cnpj').eq('id', 1).maybeSingle();
+    if (resp.error) throw resp.error;
+    config = resp.data;
+  } catch (err) {
+    console.error('Erro ao carregar prazo do relatório de IR:', err);
+    mostrarErroRelatorioIR();
+    return;
+  }
+
   const hoje = new Date().toISOString().slice(0, 10);
   const dentroDoPrazo = config?.ir_declaracao_inicio && config?.ir_declaracao_fim && hoje >= config.ir_declaracao_inicio && hoje <= config.ir_declaracao_fim;
 
@@ -61,83 +71,113 @@ async function montarSecaoIR(proprietarios) {
     btn.disabled = true;
     btn.textContent = 'Gerando...';
 
-    const dataInicio = `${anoAnterior}-01-01`;
-    const dataFim = `${anoAnterior}-12-31`;
+    try {
+      const dataInicio = `${anoAnterior}-01-01`;
+      const dataFim = `${anoAnterior}-12-31`;
 
-    const { data: contratos } = await supabase
-      .from('contratos')
-      .select('id, vendedor_locador_id, imoveis(titulo, endereco)')
-      .in('vendedor_locador_id', pessoaIds)
-      .eq('tipo', 'locacao');
+      const { data: contratos, error: erroContratos } = await supabase
+        .from('contratos')
+        .select('id, vendedor_locador_id, imoveis(titulo, endereco)')
+        .in('vendedor_locador_id', pessoaIds)
+        .eq('tipo', 'locacao');
 
-    const nomeporId = Object.fromEntries(proprietarios.map((p) => [p.id, p.nome]));
-    let totalGeral = 0;
-    const blocos = [];
+      if (erroContratos) throw erroContratos;
 
-    for (const contrato of (contratos || [])) {
-      const { data: cobrancas } = await supabase
-        .from('cobrancas')
-        .select('referencia, valor_base, cobranca_ajustes(*)')
-        .eq('contrato_id', contrato.id)
-        .gte('referencia', dataInicio)
-        .lte('referencia', dataFim)
-        .order('referencia');
+      const nomeporId = Object.fromEntries(proprietarios.map((p) => [p.id, p.nome]));
+      let totalGeral = 0;
+      const blocos = [];
 
-      if (!cobrancas || !cobrancas.length) continue;
+      for (const contrato of (contratos || [])) {
+        const { data: cobrancas, error: erroCobrancas } = await supabase
+          .from('cobrancas')
+          .select('referencia, valor_base, cobranca_ajustes(*)')
+          .eq('contrato_id', contrato.id)
+          .gte('referencia', dataInicio)
+          .lte('referencia', dataFim)
+          .order('referencia');
 
-      const { data: contratoCompleto } = await supabase.from('contratos').select('taxa_administracao_percentual').eq('id', contrato.id).maybeSingle();
-      const taxa = Number(contratoCompleto?.taxa_administracao_percentual || 0);
+        if (erroCobrancas) throw erroCobrancas;
+        if (!cobrancas || !cobrancas.length) continue;
 
-      let totalImovel = 0;
-      const nomesMesesAbrev = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      const linhas = cobrancas.map((cb) => {
-        const bruto = Number(cb.valor_base || 0);
-        let ajusteProprietario = 0;
-        (cb.cobranca_ajustes || []).forEach((a) => {
-          const v = Number(a.valor) || 0;
-          if (a.tipo === 'acrescimo' && a.destino === 'proprietario') ajusteProprietario += v;
-          if (a.tipo === 'desconto' && a.destino === 'proprietario') ajusteProprietario += v;
-          if (a.tipo === 'desconto' && a.origem === 'proprietario') ajusteProprietario -= v;
-        });
-        const liquido = bruto * (1 - taxa / 100) + ajusteProprietario;
-        totalImovel += liquido;
-        totalGeral += liquido;
-        const [ay, am] = cb.referencia.split('-');
-        return `<tr><td>${nomesMesesAbrev[Number(am)]}/${ay}</td><td>${fmtMoney(liquido)}</td></tr>`;
-      }).join('');
+        const { data: contratoCompleto, error: erroContrato } = await supabase.from('contratos').select('taxa_administracao_percentual').eq('id', contrato.id).maybeSingle();
+        if (erroContrato) throw erroContrato;
+        const taxa = Number(contratoCompleto?.taxa_administracao_percentual || 0);
 
-      blocos.push(`
-        <div style="margin-top:14px;">
-          <p style="font-weight:700;margin:0 0 4px;">${nomeporId[contrato.vendedor_locador_id] ? nomeporId[contrato.vendedor_locador_id] + ' — ' : ''}${contrato.imoveis?.titulo || 'Imóvel'} ${contrato.imoveis?.endereco ? '(' + contrato.imoveis.endereco + ')' : ''}</p>
-          <table class="portal-table"><thead><tr><th>Mês</th><th>Repassado</th></tr></thead><tbody>${linhas}</tbody></table>
-          <p style="text-align:right;font-weight:700;">Subtotal: ${fmtMoney(totalImovel)}</p>
-        </div>
+        let totalImovel = 0;
+        const nomesMesesAbrev = ['', 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        const linhas = cobrancas.map((cb) => {
+          const bruto = Number(cb.valor_base || 0);
+          let ajusteProprietario = 0;
+          (cb.cobranca_ajustes || []).forEach((a) => {
+            const v = Number(a.valor) || 0;
+            if (a.tipo === 'acrescimo' && a.destino === 'proprietario') ajusteProprietario += v;
+            if (a.tipo === 'desconto' && a.destino === 'proprietario') ajusteProprietario += v;
+            if (a.tipo === 'desconto' && a.origem === 'proprietario') ajusteProprietario -= v;
+          });
+          const liquido = bruto * (1 - taxa / 100) + ajusteProprietario;
+          totalImovel += liquido;
+          totalGeral += liquido;
+          const [ay, am] = cb.referencia.split('-');
+          return `<tr><td>${nomesMesesAbrev[Number(am)]}/${ay}</td><td>${fmtMoney(liquido)}</td></tr>`;
+        }).join('');
+
+        blocos.push(`
+          <div style="margin-top:14px;">
+            <p style="font-weight:700;margin:0 0 4px;">${nomeporId[contrato.vendedor_locador_id] ? nomeporId[contrato.vendedor_locador_id] + ' — ' : ''}${contrato.imoveis?.titulo || 'Imóvel'} ${contrato.imoveis?.endereco ? '(' + contrato.imoveis.endereco + ')' : ''}</p>
+            <table class="portal-table"><thead><tr><th>Mês</th><th>Repassado</th></tr></thead><tbody>${linhas}</tbody></table>
+            <p style="text-align:right;font-weight:700;">Subtotal: ${fmtMoney(totalImovel)}</p>
+          </div>
+        `);
+      }
+
+      if (!blocos.length) {
+        // Nenhum dado encontrado pro ano — não abre relatório vazio, orienta a falar com a administração.
+        mostrarErroRelatorioIR();
+        return;
+      }
+
+      const janela = window.open('', '_blank');
+      janela.document.write(`
+        <html><head><title>Relatório IR ${anoAnterior}</title><link rel="stylesheet" href="css/style.css"></head>
+        <body style="padding:24px;font-family:sans-serif;">
+          <div style="text-align:center;margin-bottom:20px;">
+            <h2>${config?.razao_social || 'Gregório | Meu Lar Imóveis'}</h2>
+            <p>CNPJ: ${config?.cnpj || '—'}</p>
+            <h3>Relatório de repasses para fins de Imposto de Renda</h3>
+            <p>Proprietário(s): <strong>${proprietarios.map((p) => p.nome).join(' e ')}</strong></p>
+            <p>Ano-calendário: ${anoAnterior} (janeiro a dezembro)</p>
+          </div>
+          ${blocos.join('')}
+          <h2 style="text-align:right;margin-top:20px;border-top:2px solid #0F2747;padding-top:10px;">Total repassado em ${anoAnterior}: ${fmtMoney(totalGeral)}</h2>
+          <p style="font-size:.75rem;color:#666;margin-top:16px;">Relatório gerado automaticamente. Não substitui orientação de um contador.</p>
+        </body></html>
       `);
+      janela.document.close();
+      janela.focus();
+      setTimeout(() => janela.print(), 300);
+
+      btn.disabled = false;
+      btn.textContent = `Gerar relatório de ${anoAnterior}`;
+    } catch (err) {
+      console.error('Erro ao gerar relatório de IR:', err);
+      mostrarErroRelatorioIR();
     }
-
-    const janela = window.open('', '_blank');
-    janela.document.write(`
-      <html><head><title>Relatório IR ${anoAnterior}</title><link rel="stylesheet" href="css/style.css"></head>
-      <body style="padding:24px;font-family:sans-serif;">
-        <div style="text-align:center;margin-bottom:20px;">
-          <h2>${config?.razao_social || 'Gregório | Meu Lar Imóveis'}</h2>
-          <p>CNPJ: ${config?.cnpj || '—'}</p>
-          <h3>Relatório de repasses para fins de Imposto de Renda</h3>
-          <p>Proprietário(s): <strong>${proprietarios.map((p) => p.nome).join(' e ')}</strong></p>
-          <p>Ano-calendário: ${anoAnterior} (janeiro a dezembro)</p>
-        </div>
-        ${blocos.join('')}
-        <h2 style="text-align:right;margin-top:20px;border-top:2px solid #0F2747;padding-top:10px;">Total repassado em ${anoAnterior}: ${fmtMoney(totalGeral)}</h2>
-        <p style="font-size:.75rem;color:#666;margin-top:16px;">Relatório gerado automaticamente. Não substitui orientação de um contador.</p>
-      </body></html>
-    `);
-    janela.document.close();
-    janela.focus();
-    setTimeout(() => janela.print(), 300);
-
-    btn.disabled = false;
-    btn.textContent = `Gerar relatório de ${anoAnterior}`;
   });
+}
+
+// Se algo der errado ao montar o relatório (erro de conexão, dado faltando etc.), em vez de travar
+// silenciosamente ou abrir um relatório quebrado, orienta o proprietário a chamar a administração.
+function mostrarErroRelatorioIR() {
+  const wrap = $('#irStatusWrap');
+  const numeroWhats = '5541995476193';
+  const mensagem = encodeURIComponent('Olá! Tive um problema ao gerar meu relatório de Imposto de Renda no Portal do Proprietário e preciso de ajuda.');
+  wrap.innerHTML = `
+    <div>
+      <strong>Não foi possível gerar o relatório.</strong>
+      <span class="portal-item-sub">Pode ter sido uma falha pontual. Entre em contato com a administração pelo WhatsApp que resolvemos rápido pra você.</span>
+    </div>
+    <a class="btn btn-primary btn-sm" href="https://wa.me/${numeroWhats}?text=${mensagem}" target="_blank" rel="noopener">Falar no WhatsApp (41) 99547-6193</a>
+  `;
 }
 
 async function carregarImoveis(proprietarios) {
