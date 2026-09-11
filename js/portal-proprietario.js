@@ -104,7 +104,7 @@ async function carregarRepasses(proprietarios) {
   for (const contrato of contratos) {
     const { data: cobrancas } = await supabase
       .from('cobrancas')
-      .select('*')
+      .select('*, cobranca_ajustes(*)')
       .eq('contrato_id', contrato.id)
       .gte('referencia', dataMinima)
       .order('referencia', { ascending: false });
@@ -112,17 +112,45 @@ async function carregarRepasses(proprietarios) {
     const taxa = Number(contrato.taxa_administracao_percentual || 0);
     const rows = (cobrancas || []).map(c => {
       const bruto = Number(c.valor_base || 0);
-      const liquido = bruto * (1 - taxa / 100);
+      const repasseBase = bruto * (1 - taxa / 100);
+
+      // Soma só os ajustes que de fato mexem no que o proprietário recebe (créditos/descontos
+      // com origem ou destino = proprietário) — os que ficam só entre inquilino/imobiliária não mudam o repasse.
+      let ajusteProprietario = 0;
+      const ajustes = c.cobranca_ajustes || [];
+      ajustes.forEach((a) => {
+        const v = Number(a.valor) || 0;
+        if (a.tipo === 'acrescimo' && a.destino === 'proprietario') ajusteProprietario += v;
+        if (a.tipo === 'desconto' && a.destino === 'proprietario') ajusteProprietario += v;
+        if (a.tipo === 'desconto' && a.origem === 'proprietario') ajusteProprietario -= v;
+      });
+
+      const liquido = repasseBase + ajusteProprietario;
       if (ultimoRepasseTxt === '—' && c.status === 'pago') {
         ultimoRepasseTxt = fmtMoney(liquido);
       }
+
+      const linhasAjustes = ajustes.map((a) => {
+        const v = Number(a.valor) || 0;
+        const afetaProprietario = (a.destino === 'proprietario') || (a.origem === 'proprietario');
+        const ehCredito = (a.tipo === 'acrescimo' && a.destino === 'proprietario') || (a.tipo === 'desconto' && a.destino === 'proprietario');
+        const sinal = ehCredito ? '+' : '−';
+        const notaRetido = !afetaProprietario ? ' (retido pela imobiliária, não afeta seu repasse)' : '';
+        return `<tr class="portal-ajuste-row">
+          <td colspan="2" class="portal-ajuste-desc">↳ ${a.descricao || (a.tipo === 'acrescimo' ? 'Acréscimo' : 'Desconto')}${notaRetido}</td>
+          <td class="${ehCredito ? 'portal-ajuste-credito' : 'portal-ajuste-debito'}">${sinal} ${fmtMoney(v)}</td>
+          <td></td>
+        </tr>`;
+      }).join('');
+
       return `
         <tr>
           <td>${fmtMonth(c.referencia)}</td>
           <td>${fmtMoney(bruto)}</td>
           <td><strong>${fmtMoney(liquido)}</strong></td>
           <td><span class="status-pill status-${c.status}">${STATUS_LABEL[c.status] || c.status}</span></td>
-        </tr>`;
+        </tr>
+        ${linhasAjustes}`;
     }).join('');
 
     blocks.push(`

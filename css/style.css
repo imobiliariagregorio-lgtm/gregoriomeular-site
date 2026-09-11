@@ -620,6 +620,11 @@ img{max-width:100%;display:block;}
 .portal-modal input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:.95rem;}
 .portal-modal-erro{color:#c0392b;font-size:.82rem;margin:10px 0 0;}
 .portal-modal-acoes{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+
+.portal-ajuste-row td{padding:6px 10px !important;background:var(--bg-alt);font-size:.78rem;border-top:none !important;}
+.portal-ajuste-desc{color:var(--gray-text);}
+.portal-ajuste-credito{color:#1a7f4f;font-weight:700;white-space:nowrap;}
+.portal-ajuste-debito{color:#c0392b;font-weight:700;white-space:nowrap;}
 .portal-stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:36px;}
 .portal-section-title{font-size:1.2rem;margin-top:40px;margin-bottom:6px;}
 .portal-section-sub{font-size:.85rem;margin-bottom:20px;}
