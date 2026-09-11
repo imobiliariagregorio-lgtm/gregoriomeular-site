@@ -35,10 +35,14 @@ async function carregarPessoaEDashboard(session) {
   $('#ownerName').textContent = proprietarios.map((p) => p.nome).join(' & ');
 
   const pessoaIds = proprietarios.map((p) => p.id);
-  await Promise.all([carregarImoveis(pessoaIds), carregarRepasses(pessoaIds)]);
+  await Promise.all([carregarImoveis(proprietarios), carregarRepasses(proprietarios)]);
 }
 
-async function carregarImoveis(pessoaIds) {
+async function carregarImoveis(proprietarios) {
+  const pessoaIds = proprietarios.map((p) => p.id);
+  const nomeporId = Object.fromEntries(proprietarios.map((p) => [p.id, p.nome]));
+  const mostrarDono = proprietarios.length > 1;
+
   const { data: imoveis } = await supabase
     .from('imoveis')
     .select('*')
@@ -58,6 +62,7 @@ async function carregarImoveis(pessoaIds) {
   list.innerHTML = imoveis.map(im => `
     <div class="portal-item">
       <div>
+        ${mostrarDono ? `<span class="portal-dono-tag">${nomeporId[im.proprietario_id] || 'Proprietário'}</span>` : ''}
         <strong>${im.titulo || im.codigo || 'Imóvel'}</strong>
         <span class="portal-item-sub">${[im.endereco, im.bairro, im.cidade].filter(Boolean).join(', ') || 'Endereço não informado'}</span>
       </div>
@@ -69,7 +74,11 @@ async function carregarImoveis(pessoaIds) {
   `).join('');
 }
 
-async function carregarRepasses(pessoaIds) {
+async function carregarRepasses(proprietarios) {
+  const pessoaIds = proprietarios.map((p) => p.id);
+  const nomeporId = Object.fromEntries(proprietarios.map((p) => [p.id, p.nome]));
+  const mostrarDono = proprietarios.length > 1;
+
   const { data: contratos } = await supabase
     .from('contratos')
     .select('*, imoveis(titulo, endereco, bairro)')
@@ -118,6 +127,7 @@ async function carregarRepasses(pessoaIds) {
 
     blocks.push(`
       <div class="portal-contract-block">
+        ${mostrarDono ? `<span class="portal-dono-tag">${nomeporId[contrato.vendedor_locador_id] || 'Proprietário'}</span>` : ''}
         <h3>${contrato.imoveis ? contrato.imoveis.titulo : 'Imóvel'} <span class="status-pill status-${contrato.status}">${contrato.status}</span></h3>
         <p class="portal-item-sub">${contrato.imoveis ? [contrato.imoveis.endereco, contrato.imoveis.bairro].filter(Boolean).join(', ') : ''}</p>
         <p class="portal-item-sub"><strong>Aluguel:</strong> ${fmtMoney(Number(contrato.valor))}/mês · <strong>Renovação do contrato:</strong> ${contrato.data_fim ? new Date(contrato.data_fim + 'T00:00:00').toLocaleDateString('pt-BR') : 'sem data definida'}</p>

@@ -623,6 +623,7 @@ img{max-width:100%;display:block;}
 .portal-item-value{font-family:var(--font-display);font-weight:700;color:var(--orange);}
 
 .portal-contract-block{background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-card);border-radius:var(--radius);padding:24px;margin-bottom:24px;}
+.portal-dono-tag{display:inline-block;background:var(--navy-900,#0F2747);color:#fff;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:3px 10px;border-radius:999px;margin-bottom:8px;}
 .portal-contract-block h3{display:flex;align-items:center;gap:10px;font-size:1.05rem;}
 
 .portal-highlight{display:flex;justify-content:space-between;align-items:center;gap:16px;background:rgba(245,130,32,.08);border:1px solid rgba(245,130,32,.3);border-radius:12px;padding:16px 20px;margin:16px 0;flex-wrap:wrap;}
