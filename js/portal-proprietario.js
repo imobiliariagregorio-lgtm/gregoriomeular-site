@@ -81,7 +81,7 @@ async function carregarRepasses(proprietarios) {
 
   const { data: contratos } = await supabase
     .from('contratos')
-    .select('*, imoveis(titulo, endereco, bairro)')
+    .select('*, imoveis(titulo, endereco, bairro), pessoas!contratos_comprador_locatario_id_fkey(nome)')
     .in('vendedor_locador_id', pessoaIds)
     .eq('tipo', 'locacao')
     .eq('status', 'ativo')
@@ -130,6 +130,7 @@ async function carregarRepasses(proprietarios) {
         ${mostrarDono ? `<span class="portal-dono-tag">${nomeporId[contrato.vendedor_locador_id] || 'Proprietário'}</span>` : ''}
         <h3>${contrato.imoveis ? contrato.imoveis.titulo : 'Imóvel'} <span class="status-pill status-${contrato.status}">${contrato.status}</span></h3>
         <p class="portal-item-sub">${contrato.imoveis ? [contrato.imoveis.endereco, contrato.imoveis.bairro].filter(Boolean).join(', ') : ''}</p>
+        <p class="portal-item-sub"><strong>Inquilino:</strong> ${contrato.pessoas?.nome || 'não informado'}</p>
         <p class="portal-item-sub"><strong>Aluguel:</strong> ${fmtMoney(Number(contrato.valor))}/mês · <strong>Renovação do contrato:</strong> ${contrato.data_fim ? new Date(contrato.data_fim + 'T00:00:00').toLocaleDateString('pt-BR') : 'sem data definida'}</p>
         <div class="table-wrap">
           <table class="portal-table">
