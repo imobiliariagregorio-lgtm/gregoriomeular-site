@@ -160,6 +160,7 @@ async function carregarRepasses(proprietarios) {
         <p class="portal-item-sub">${contrato.imoveis ? [contrato.imoveis.endereco, contrato.imoveis.bairro].filter(Boolean).join(', ') : ''}</p>
         <p class="portal-item-sub"><strong>Inquilino:</strong> ${contrato.pessoas?.nome || 'não informado'}</p>
         <p class="portal-item-sub"><strong>Aluguel:</strong> ${fmtMoney(Number(contrato.valor))}/mês · <strong>Renovação do contrato:</strong> ${contrato.data_fim ? new Date(contrato.data_fim + 'T00:00:00').toLocaleDateString('pt-BR') : 'sem data definida'}</p>
+        <p class="portal-item-sub"><strong>Dia programado do repasse:</strong> ${contrato.dia_repasse ? `todo dia ${contrato.dia_repasse}` : 'ainda não definido'}</p>
         <div class="table-wrap">
           <table class="portal-table">
             <thead><tr><th>Referência</th><th>Aluguel bruto</th><th>Repasse líquido</th><th>Status</th></tr></thead>
