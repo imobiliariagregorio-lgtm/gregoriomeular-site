@@ -48,6 +48,64 @@ document.addEventListener('click', (e) => {
   trackWhatsappClick(link.id || link.closest('[id]')?.id || 'whatsapp_generico');
 });
 
+// =====================================================================
+// RASTREIO DE CAMPANHA (Meta Ads / UTM) — 19/09/2026
+// Lê utm_source/medium/campaign/content/term, campanha/conjunto/anuncio e
+// fbclid da URL ao abrir qualquer página. Guarda em localStorage por 30 dias
+// no modelo "first-touch" (não sobrescreve se já houver um valor salvo e
+// ainda válido). Enviado como campos ocultos junto com os formulários de
+// lead. Uso só interno — nunca exibido para o visitante (ver política de
+// privacidade).
+// =====================================================================
+const UTM_STORAGE_KEY = 'mlp_utm_v1';
+const UTM_STORAGE_DIAS = 30;
+const UTM_PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'campanha', 'conjunto', 'anuncio'];
+
+function capturarUTM() {
+  try {
+    const existenteRaw = localStorage.getItem(UTM_STORAGE_KEY);
+    if (existenteRaw) {
+      const existente = JSON.parse(existenteRaw);
+      const idadeDias = (Date.now() - (existente._salvo_em || 0)) / (1000 * 60 * 60 * 24);
+      if (idadeDias <= UTM_STORAGE_DIAS) return; // first-touch já guardado e ainda válido — não sobrescreve
+      localStorage.removeItem(UTM_STORAGE_KEY);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const dados = {};
+    UTM_PARAMS.forEach((p) => { const v = params.get(p); if (v) dados[p] = v; });
+    const fbclid = params.get('fbclid');
+    if (fbclid) dados.meta_clid = fbclid;
+
+    if (Object.keys(dados).length === 0) return; // sem parâmetro de campanha na URL, nada a guardar
+    dados.landing_url = window.location.href;
+    dados._salvo_em = Date.now();
+    localStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(dados));
+  } catch (e) { /* localStorage indisponível (ex: modo privado) — segue sem rastreio */ }
+}
+capturarUTM();
+
+function obterUTMSalvo() {
+  try {
+    const raw = localStorage.getItem(UTM_STORAGE_KEY);
+    if (!raw) return {};
+    const dados = JSON.parse(raw);
+    const idadeDias = (Date.now() - (dados._salvo_em || 0)) / (1000 * 60 * 60 * 24);
+    if (idadeDias > UTM_STORAGE_DIAS) { localStorage.removeItem(UTM_STORAGE_KEY); return {}; }
+    const { _salvo_em, ...limpo } = dados;
+    return limpo;
+  } catch (e) { return {}; }
+}
+
+// Se a origem do clique foi Facebook/Instagram, a origem do lead reflete isso.
+// Caso contrário, retorna null e quem chamou mantém a regra atual (origem 'site').
+function origemPorUTM(utm) {
+  const src = (utm.utm_source || '').toLowerCase();
+  if (['facebook', 'fb'].includes(src)) return 'facebook';
+  if (['instagram', 'ig'].includes(src)) return 'instagram';
+  return null;
+}
+
 function priceLabel(imovel) {
   if (imovel.finalidade === 'locacao' && imovel.valor_locacao) {
     return `${formatMoney(imovel.valor_locacao)}/mês`;
@@ -376,14 +434,16 @@ function renderImovelPage(imovel) {
       // abre a nova aba já no clique (síncrono) pra não ser bloqueada como pop-up
       window.open(link, '_blank', 'noopener');
 
+      const utmModal = obterUTMSalvo();
       supabase.from('leads').insert({
         nome,
         telefone,
-        origem: 'site',
+        origem: origemPorUTM(utmModal) || 'site',
         interesse: imovel.finalidade === 'locacao' ? 'locacao' : 'compra',
         imovel_id: imovel.id,
         status: 'novo',
         observacoes: `Clicou em "Falar sobre este imóvel": ${imovel.titulo}${imovel.codigo ? ' (código ' + imovel.codigo + ')' : ''}`,
+        ...utmModal,
       }).then(({ error }) => { if (error) console.error(error); });
 
       trackEvent('generate_lead', { origem: 'pagina_imovel', imovel_id: imovel.id });
@@ -873,14 +933,16 @@ $('#leadForm').addEventListener('submit', async (e) => {
   const btn = $('#leadSubmit');
   const feedback = $('#formFeedback');
 
+  const utmLeadForm = obterUTMSalvo();
   const payload = {
     nome: $('#l-nome').value.trim(),
     telefone: $('#l-telefone').value.trim(),
     email: $('#l-email').value.trim() || null,
     interesse: $('#l-interesse').value,
     observacoes: $('#l-obs').value.trim() || null,
-    origem: 'site',
+    origem: origemPorUTM(utmLeadForm) || 'site',
     status: 'novo',
+    ...utmLeadForm,
   };
 
   if (!payload.nome || !payload.telefone) return;
