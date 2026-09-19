@@ -97,13 +97,37 @@ function obterUTMSalvo() {
   } catch (e) { return {}; }
 }
 
-// Se a origem do clique foi Facebook/Instagram, a origem do lead reflete isso.
-// Caso contrário, retorna null e quem chamou mantém a regra atual (origem 'site').
+// Se veio sinal de Facebook/Instagram no rastreio, a origem reflete isso. Caso
+// contrário, retorna null e quem chamou mantém a regra atual (origem 'site').
+// Observação: a function site-criar-lead recalcula isso de novo no servidor —
+// aqui é só pra eventual uso futuro em UI, não influencia o que é gravado.
 function origemPorUTM(utm) {
   const src = (utm.utm_source || '').toLowerCase();
   if (['facebook', 'fb'].includes(src)) return 'facebook';
   if (['instagram', 'ig'].includes(src)) return 'instagram';
   return null;
+}
+
+// Cria/atualiza o lead através da function site-criar-lead (em vez de inserir
+// direto na tabela) — ela vincula pessoa_id (a chave anônima do site não tem
+// acesso à tabela pessoas), evitando duplicar quando a mesma pessoa já existe
+// por outro canal (ex: já mandou mensagem no WhatsApp antes) e preservando o
+// rastreio de campanha (first-touch) num único lead.
+const SITE_CRIAR_LEAD_URL = `${SUPABASE_URL}/functions/v1/site-criar-lead`;
+async function criarLeadSite(payload) {
+  try {
+    const resp = await fetch(SITE_CRIAR_LEAD_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await resp.json();
+    if (!resp.ok || data.erro) throw new Error(data.erro || `HTTP ${resp.status}`);
+    return { data, error: null };
+  } catch (error) {
+    console.error('criarLeadSite:', error);
+    return { data: null, error };
+  }
 }
 
 function priceLabel(imovel) {
@@ -435,13 +459,11 @@ function renderImovelPage(imovel) {
       window.open(link, '_blank', 'noopener');
 
       const utmModal = obterUTMSalvo();
-      supabase.from('leads').insert({
+      criarLeadSite({
         nome,
         telefone,
-        origem: origemPorUTM(utmModal) || 'site',
         interesse: imovel.finalidade === 'locacao' ? 'locacao' : 'compra',
         imovel_id: imovel.id,
-        status: 'novo',
         observacoes: `Clicou em "Falar sobre este imóvel": ${imovel.titulo}${imovel.codigo ? ' (código ' + imovel.codigo + ')' : ''}`,
         ...utmModal,
       }).then(({ error }) => { if (error) console.error(error); });
@@ -940,8 +962,6 @@ $('#leadForm').addEventListener('submit', async (e) => {
     email: $('#l-email').value.trim() || null,
     interesse: $('#l-interesse').value,
     observacoes: $('#l-obs').value.trim() || null,
-    origem: origemPorUTM(utmLeadForm) || 'site',
-    status: 'novo',
     ...utmLeadForm,
   };
 
@@ -951,7 +971,7 @@ $('#leadForm').addEventListener('submit', async (e) => {
   btn.textContent = 'Enviando...';
   feedback.hidden = true;
 
-  const { error } = await supabase.from('leads').insert(payload);
+  const { error } = await criarLeadSite(payload);
 
   btn.disabled = false;
   btn.textContent = 'Enviar e falar com um corretor';
