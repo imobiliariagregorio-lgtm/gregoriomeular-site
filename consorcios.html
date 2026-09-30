@@ -76,6 +76,41 @@
 
   .cs-passos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
   .cs-passo{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;}
+
+  .site-header .main-nav a,.site-header .logo-text{white-space:nowrap;}
+  @media (min-width:901px){.site-header .main-nav{gap:20px;}}
+  /* ===== v2: hero em duas colunas, benefícios, passos, soluções ===== */
+  .cs-hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;}
+  .cs-pill{display:inline-block;border:1px solid rgba(255,255,255,.35);color:var(--orange-light);font-size:.72rem;font-weight:700;letter-spacing:.08em;padding:6px 14px;border-radius:999px;margin-bottom:18px;font-family:var(--font-display);}
+  .cs-checks{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:10px;}
+  .cs-checks li{display:flex;gap:10px;align-items:flex-start;color:var(--white);font-weight:600;font-size:.95rem;}
+  .cs-checks svg{flex-shrink:0;margin-top:2px;}
+  .cs-hero-visual{background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:26px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6);}
+  .cs-hero-visual svg{display:block;width:100%;height:auto;}
+  .cs-hero-visual figcaption{color:rgba(255,255,255,.72);font-size:.78rem;text-align:center;margin-top:12px;}
+  .cs-foto{display:block;width:100%;height:auto;border-radius:16px;object-fit:cover;box-shadow:0 24px 48px -24px rgba(8,29,56,.5);}
+  .cs-hero-visual .cs-foto{border-radius:12px;aspect-ratio:3/2;}
+  .cs-foto-texto{margin:0 0 22px;aspect-ratio:3/2;max-height:300px;}
+  .cs-foto-contato{margin-top:26px;aspect-ratio:3/2;max-width:460px;}
+  .cs-btn-branco{background:var(--white);color:var(--navy);border-color:var(--white);}
+  .cs-btn-branco:hover{background:var(--orange);color:var(--white);border-color:var(--orange);}
+
+  .cs-duas-col{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;}
+  .cs-texto p{margin:0 0 1em;}
+  .cs-beneficios{display:grid;gap:16px;}
+  .cs-beneficio{display:flex;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:20px;}
+  .cs-ico{flex-shrink:0;width:46px;height:46px;border-radius:12px;background:#FFF1E4;display:flex;align-items:center;justify-content:center;}
+  .cs-beneficio h3{margin:0 0 4px;font-size:1.05rem;color:var(--navy);}
+  .cs-beneficio p{margin:0;font-size:.9rem;}
+
+  .cs-passos4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .cs-solucoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px;}
+  .cs-solucao{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:24px;display:flex;flex-direction:column;gap:8px;transition:transform .15s,border-color .15s;}
+  .cs-solucao:hover{transform:translateY(-3px);border-color:var(--orange);}
+  .cs-solucao h3{margin:6px 0 0;color:var(--navy);font-size:1.08rem;}
+  .cs-solucao p{margin:0;font-size:.88rem;flex:1;}
+  .cs-solucao .btn{margin-top:10px;align-self:flex-start;}
+
   .cs-passo-n{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--white);font-family:var(--font-display);font-weight:800;margin-bottom:12px;}
   .cs-passo h3{font-size:1.05rem;}
   .cs-passo p{margin:0;font-size:.92rem;}
@@ -114,6 +149,8 @@
   .cs-aviso p:last-child{margin:0;}
 
   @media (max-width:900px){
+    .cs-hero-grid,.cs-duas-col,.cs-passos4{grid-template-columns:1fr;}
+    .cs-hero-visual{max-width:460px;}
     .cs-passos,.cs-contato{grid-template-columns:1fr;}
     .cs-carta{padding:28px;}
   }
@@ -135,11 +172,13 @@
       <span class="logo-text">Gregório <strong>| Meu Lar</strong></span>
     </a>
     <nav class="main-nav" id="mainNav">
-      <a href="/#imoveis">Imóveis</a>
+      <a href="/">Site</a>
+      <a href="#o-que-e">O que é</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#solucoes">Soluções</a>
       <a href="#planos">Planos</a>
       <a href="#simulador">Simulador</a>
       <a href="#duvidas">Dúvidas</a>
-      <a href="#contato">Contato</a>
     </nav>
     <a href="#" class="btn btn-whatsapp nav-cta" id="navWhatsapp" target="_blank" rel="noopener">Falar no WhatsApp</a>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
@@ -150,17 +189,84 @@
 
 <main>
 
-<!-- ============ HERO ============ -->
-<section class="cs-hero" id="topo">
-  <div class="container"><div class="cs-hero-inner">
-    <h1>Consórcio de imóveis, sem juros, com quem conhece Fazenda Rio Grande</h1>
-    <p>Em vez de juros de financiamento, você paga uma taxa de administração e um fundo de reserva, diluídos nas parcelas. Escolha o crédito, simule e fale com um corretor da Gregório | Meu Lar.</p>
-    <div class="cs-hero-actions">
-      <a href="#planos" class="btn btn-primary">Ver planos</a>
-      <a href="#simulador" class="btn btn-outline">Simular minha parcela</a>
+<!-- ============ INÍCIO (HERO) ============ -->
+<section class="cs-hero" id="inicio">
+  <div class="container cs-hero-grid">
+    <div class="cs-hero-inner">
+      <span class="cs-pill">CONSÓRCIO DE IMÓVEIS</span>
+      <h1>A carta de crédito que leva você ao imóvel certo</h1>
+      <p>Apartamento, casa, terreno ou obra: o consórcio é uma forma planejada de comprar, sem juros de financiamento. As taxas de administração e o fundo de reserva vêm informados no contrato.</p>
+      <ul class="cs-checks">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFA94D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Escolha o tipo de imóvel na hora de usar a carta</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFA94D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Novo ou usado, residencial ou comercial</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFA94D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Atendimento de um corretor da Gregório | Meu Lar</span></li>
+      </ul>
+      <div class="cs-hero-actions">
+        <a href="#simulador" class="btn cs-btn-branco">Simule agora &rarr;</a>
+        <a href="#como-funciona" class="btn btn-outline">Como funciona</a>
+      </div>
+      <p class="cs-hero-nota">Consórcio administrado pela Servopa. A Gregório | Meu Lar é parceira de vendas.</p>
     </div>
-    <p class="cs-hero-nota">Consórcio administrado pela Servopa. A Gregório | Meu Lar é parceira de vendas.</p>
-  </div></div>
+    <figure class="cs-hero-visual">
+      <img class="cs-foto" src="https://yiyhspddvrypifxfzzdm.supabase.co/storage/v1/object/public/site-imagens/hero/1784918246093-istockphoto-2172316440-612x612.jpg" alt="Família sorrindo no sofá de casa" width="612" height="408" fetchpriority="high">
+      <figcaption>Realize a compra do seu imóvel com planejamento.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ O QUE É CONSÓRCIO ============ -->
+<section class="section" id="o-que-e">
+  <div class="container cs-duas-col">
+    <div class="cs-texto">
+      <img class="cs-foto cs-foto-texto" src="https://yiyhspddvrypifxfzzdm.supabase.co/storage/v1/object/public/site-imagens/hero/1784918228686-depositphotos_85496674-stock-photo-beautiful-diverse-family.jpg" alt="Família reunida e sorrindo" width="600" height="400" loading="lazy">
+      <p class="eyebrow">Entenda em 1 minuto</p>
+      <h2>O que é consórcio?</h2>
+      <p>É uma forma de compra planejada: um grupo de pessoas paga parcelas mensais e, todo mês, algumas são contempladas por sorteio ou lance. Quem é contemplado recebe uma carta de crédito para comprar o bem.</p>
+      <p>Não há juros como no financiamento. O custo está na taxa de administração, no fundo de reserva e, em alguns planos, no seguro, todos informados no contrato do grupo.</p>
+      <p>A contemplação não tem prazo garantido. Por isso o consórcio funciona melhor para quem planeja com antecedência.</p>
+      <a href="#como-funciona" class="btn btn-primary">Entender em 4 passos &rarr;</a>
+    </div>
+    <div class="cs-beneficios">
+      <div class="cs-beneficio"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M17 7.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2.2 2.6 5 3 5 1.100 5 3.500-2.200 3-5 3-5-1.100-5-3"/></svg></span><div><h3>Sem juros de financiamento</h3><p>Você paga taxa de administração e fundo de reserva, informados em contrato.</p></div></div>
+      <div class="cs-beneficio"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><div><h3>Planejamento</h3><p>Parcelas mensais que cabem no orçamento, com prazo definido no plano.</p></div></div>
+      <div class="cs-beneficio"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.500 12 4l9 7.500"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><div><h3>Flexibilidade</h3><p>Use a carta para comprar, construir, reformar ou quitar, conforme as regras do plano.</p></div></div>
+      <div class="cs-beneficio"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><div><h3>Lance para antecipar</h3><p>Além do sorteio, você pode ofertar lance para tentar antecipar a contemplação.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMO FUNCIONA ============ -->
+<section class="section section-alt" id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Passo a passo</p>
+      <h2>Como funciona o consórcio?</h2>
+      <p>É simples, seguro e transparente. Veja o passo a passo:</p>
+    </div>
+    <div class="cs-passos4">
+      <div class="cs-passo"><span class="cs-passo-n">1</span><h3>Escolha o plano</h3><p>Defina o valor da carta e o prazo. Um corretor confirma as condições do grupo antes de você aderir.</p></div>
+      <div class="cs-passo"><span class="cs-passo-n">2</span><h3>Pague as parcelas</h3><p>Você paga a parcela todo mês. Ela reúne fundo comum, fundo de reserva e taxa de administração.</p></div>
+      <div class="cs-passo"><span class="cs-passo-n">3</span><h3>Concorra todo mês</h3><p>Nas assembleias mensais, você concorre por sorteio e pode ofertar lance para antecipar.</p></div>
+      <div class="cs-passo"><span class="cs-passo-n">4</span><h3>Use a carta</h3><p>Contemplado e com a documentação aprovada, você usa a carta de crédito para comprar o bem.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOLUÇÕES ============ -->
+<section class="section" id="solucoes">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Soluções</p>
+      <h2>Consórcio para cada objetivo</h2>
+      <p>Escolha o que você quer conquistar e um corretor monta a simulação.</p>
+    </div>
+    <div class="cs-solucoes">
+      <article class="cs-solucao"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.500 12 4l9 7.500"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><h3>Imóveis</h3><p>Apartamento ou casa, novo ou usado, residencial ou comercial.</p><button type="button" class="btn btn-primary btn-sm" data-tipo="imovel">Simular imóvel</button></article>
+      <article class="cs-solucao"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M6 20V9l6-5 6 5v11"/><path d="M9 20v-5h6v5"/><path d="M12 9v.01"/></svg></span><h3>Terrenos e construção</h3><p>Use a carta de crédito para comprar o terreno ou custear a obra da sua casa.</p><button type="button" class="btn btn-primary btn-sm" data-tipo="obra">Simular construção</button></article>
+      <article class="cs-solucao"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.500 5.500 18.500 9.500"/><path d="m4 20 9.500-9.500"/><path d="M13 6a4 4 0 0 1 5.500 5.500L16 9 15 8Z"/></svg></span><h3>Reforma</h3><p>Reforme ou amplie o seu imóvel sem juros de financiamento.</p><button type="button" class="btn btn-primary btn-sm" data-tipo="obra">Simular reforma</button></article>
+      <article class="cs-solucao"><span class="cs-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18"/><circle cx="7.500" cy="17.500" r="1.500"/><circle cx="16.500" cy="17.500" r="1.500"/></svg></span><h3>Veículos</h3><p>Carro ou moto: planeje a compra do seu veículo.</p><button type="button" class="btn btn-primary btn-sm" data-tipo="veiculo">Simular veículo</button></article>
+    </div>
+  </div>
 </section>
 
 <!-- ============ PLANOS ============ -->
@@ -173,33 +279,6 @@
     </div>
     <div class="cs-planos-grid" id="planosGrid">
       <div class="skeleton-row" data-skeleton></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ COMO FUNCIONA ============ -->
-<section class="section section-alt" id="como-funciona">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow">Passo a passo</p>
-      <h2>Como o consórcio funciona</h2>
-    </div>
-    <div class="cs-passos">
-      <div class="cs-passo">
-        <span class="cs-passo-n">1</span>
-        <h3>Você escolhe o crédito</h3>
-        <p>Defina o valor da carta e o prazo do plano. Um corretor confirma as condições do grupo antes de você aderir.</p>
-      </div>
-      <div class="cs-passo">
-        <span class="cs-passo-n">2</span>
-        <h3>Paga as parcelas e concorre</h3>
-        <p>Todo mês há assembleia. Você concorre por sorteio e pode ofertar lance para tentar antecipar a contemplação.</p>
-      </div>
-      <div class="cs-passo">
-        <span class="cs-passo-n">3</span>
-        <h3>Usa a carta para comprar</h3>
-        <p>Depois de contemplado e com a documentação aprovada, você usa a carta de crédito para comprar o imóvel.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -300,6 +379,7 @@
       <h2>Receba uma simulação sem compromisso</h2>
       <p>Preencha ao lado e um corretor da equipe te chama. Se preferir, fale direto pelo WhatsApp.</p>
       <a href="#" class="btn btn-whatsapp" id="contactWhatsapp" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+      <img class="cs-foto cs-foto-contato" src="https://yiyhspddvrypifxfzzdm.supabase.co/storage/v1/object/public/site-imagens/hero/1784918181688-198840556-my-heart-in-one-picture-a-beautiful-family-taking-a-selfie-together-while-bonding-on-the-sofa-at.jpg" alt="Família tirando uma selfie em casa" width="450" height="300" loading="lazy">
     </div>
 
     <div>
@@ -497,6 +577,15 @@
     planoEscolhido = 'Plano promocional de ' + creditoCurto(credito) + (parcela ? ', parcela promocional de ' + brl.format(parcela) : '') + '.';
     $('contato').scrollIntoView({ behavior: 'smooth' });
     setTimeout(function () { $('c-nome').focus({ preventScroll: true }); }, 500);
+  });
+
+  // ---------- Soluções: escolhem o tipo no formulário e descem até o contato ----------
+  document.querySelectorAll('[data-tipo]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $('c-tipo').value = b.getAttribute('data-tipo');
+      $('contato').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(function () { $('c-nome').focus({ preventScroll: true }); }, 500);
+    });
   });
 
   // ---------- Carta contemplada: só ajusta o formulário ----------
