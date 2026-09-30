@@ -32,8 +32,8 @@
 /></noscript>
 <!-- End Meta Pixel Code -->
 
-<title>Consórcio de imóveis | Gregório | Meu Lar Imobiliária</title>
-<meta name="description" content="Consórcio de imóveis sem juros com a Gregório | Meu Lar, parceira de vendas do Consórcio Servopa. Veja os planos, simule a parcela e fale com um corretor.">
+<title>Consórcio de imóveis e veículos | Gregório | Meu Lar Imobiliária</title>
+<meta name="description" content="Consórcio de imóveis e de veículos sem juros de financiamento com a Gregório | Meu Lar, parceira de vendas do Consórcio Servopa. Veja os planos, simule a parcela e fale com um corretor.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://gregoriomeular-site.netlify.app/consorcios">
 
@@ -89,9 +89,15 @@
   .cs-hero-visual svg{display:block;width:100%;height:auto;}
   .cs-hero-visual figcaption{color:rgba(255,255,255,.72);font-size:.78rem;text-align:center;margin-top:12px;}
   .cs-foto{display:block;width:100%;height:auto;border-radius:16px;object-fit:cover;box-shadow:0 24px 48px -24px rgba(8,29,56,.5);}
+  .cs-hero-visual{position:relative;}
   .cs-hero-visual .cs-foto{border-radius:12px;aspect-ratio:3/2;}
+  .cs-foto-mini{position:absolute;right:-12px;bottom:84px;width:40%;height:auto;aspect-ratio:4/3;object-fit:cover;border:3px solid var(--white);border-radius:12px;box-shadow:0 18px 36px -14px rgba(0,0,0,.6);}
   .cs-foto-texto{margin:0 0 22px;aspect-ratio:3/2;max-height:300px;}
   .cs-foto-contato{margin-top:26px;aspect-ratio:3/2;max-width:460px;}
+  .cs-veiculos{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;}
+  .cs-veiculos .cs-foto{aspect-ratio:4/3;}
+  .cs-veiculos .cs-checks li{color:var(--text);}
+  .cs-veiculos .cs-checks svg circle,.cs-veiculos .cs-checks svg path{stroke:#F58220;}
   .cs-btn-branco{background:var(--white);color:var(--navy);border-color:var(--white);}
   .cs-btn-branco:hover{background:var(--orange);color:var(--white);border-color:var(--orange);}
 
@@ -149,7 +155,7 @@
   .cs-aviso p:last-child{margin:0;}
 
   @media (max-width:900px){
-    .cs-hero-grid,.cs-duas-col,.cs-passos4{grid-template-columns:1fr;}
+    .cs-hero-grid,.cs-duas-col,.cs-passos4,.cs-veiculos{grid-template-columns:1fr;}
     .cs-hero-visual{max-width:460px;}
     .cs-passos,.cs-contato{grid-template-columns:1fr;}
     .cs-carta{padding:28px;}
@@ -176,6 +182,7 @@
       <a href="#o-que-e">O que é</a>
       <a href="#como-funciona">Como funciona</a>
       <a href="#solucoes">Soluções</a>
+      <a href="#veiculos">Veículos</a>
       <a href="#planos">Planos</a>
       <a href="#simulador">Simulador</a>
       <a href="#duvidas">Dúvidas</a>
@@ -193,9 +200,9 @@
 <section class="cs-hero" id="inicio">
   <div class="container cs-hero-grid">
     <div class="cs-hero-inner">
-      <span class="cs-pill">CONSÓRCIO DE IMÓVEIS</span>
-      <h1>A carta de crédito que leva você ao imóvel certo</h1>
-      <p>Apartamento, casa, terreno ou obra: o consórcio é uma forma planejada de comprar, sem juros de financiamento. As taxas de administração e o fundo de reserva vêm informados no contrato.</p>
+      <span class="cs-pill">CONSÓRCIO DE IMÓVEIS E VEÍCULOS</span>
+      <h1>A carta de crédito que leva você ao imóvel ou ao veículo certo</h1>
+      <p>Apartamento, casa, terreno, obra, carro ou moto: o consórcio é uma forma planejada de comprar, sem juros de financiamento. As taxas de administração e o fundo de reserva vêm informados no contrato.</p>
       <ul class="cs-checks">
         <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFA94D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Escolha o tipo de imóvel na hora de usar a carta</span></li>
         <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFA94D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Novo ou usado, residencial ou comercial</span></li>
@@ -209,7 +216,8 @@
     </div>
     <figure class="cs-hero-visual">
       <img class="cs-foto" src="https://yiyhspddvrypifxfzzdm.supabase.co/storage/v1/object/public/site-imagens/hero/1784918246093-istockphoto-2172316440-612x612.jpg" alt="Família sorrindo no sofá de casa" width="612" height="408" fetchpriority="high">
-      <figcaption>Realize a compra do seu imóvel com planejamento.</figcaption>
+      <img class="cs-foto-mini" src="/assets/consorcio-veiculos.jpg" alt="Carro SUV branco em uma estrada" width="1000" height="750">
+      <figcaption>Realize a compra do seu imóvel ou do seu veículo com planejamento.</figcaption>
     </figure>
   </div>
 </section>
@@ -269,6 +277,28 @@
   </div>
 </section>
 
+<!-- ============ VEÍCULOS ============ -->
+<section class="section section-alt" id="veiculos">
+  <div class="container cs-veiculos">
+    <img class="cs-foto" src="/assets/consorcio-veiculos.jpg" alt="Carro SUV branco em uma estrada curva cercada de árvores" width="1000" height="750" loading="lazy">
+    <div class="cs-texto">
+      <p class="eyebrow">Veículos</p>
+      <h2>Consórcio de veículos</h2>
+      <p>Escolha o seu carro, a sua moto ou outro veículo e planeje a compra sem financiamento tradicional. Você paga parcelas mensais definidas no contrato e usa a carta de crédito depois de contemplado.</p>
+      <ul class="cs-checks">
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Carro, moto e outros veículos, conforme as regras do plano</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Prazos de 40 a 75 meses, conforme o grupo</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Sem juros de financiamento: taxa de administração e fundo de reserva informados em contrato</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Contemplação por sorteio ou lance, sem data garantida</span></li>
+      </ul>
+      <div class="cs-hero-actions">
+        <button type="button" class="btn btn-primary" data-tipo="veiculo">Simular veículo</button>
+        <a href="#simulador" class="btn btn-outline" data-simbem="veiculo">Usar o simulador</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ PLANOS ============ -->
 <section class="section" id="planos">
   <div class="container">
@@ -293,6 +323,13 @@
     <div class="simulator-box">
       <form class="simulator-form" id="simForm">
         <div class="form-row">
+          <label for="sim-bem">Tipo de bem</label>
+          <select id="sim-bem">
+            <option value="imovel">Imóvel</option>
+            <option value="veiculo">Veículo</option>
+          </select>
+        </div>
+        <div class="form-row">
           <label for="sim-credito">Valor do crédito (R$)</label>
           <input required type="number" id="sim-credito" min="20000" step="1000" value="100000">
         </div>
@@ -307,7 +344,7 @@
           </select>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Calcular parcela estimada</button>
-        <p class="cs-sim-nota">Imóveis: prazos de 120 a 240 meses, conforme o grupo.</p>
+        <p class="cs-sim-nota" id="simNota">Imóveis: prazos de 120 a 240 meses, conforme o grupo.</p>
       </form>
 
       <div class="simulator-result" id="simResult" hidden>
@@ -319,7 +356,7 @@
           <div><strong id="simCredito">-</strong><span>Crédito da carta</span></div>
           <div><strong id="simTotalFaixa">-</strong><span>Total pago no prazo (estimativa)</span></div>
         </div>
-        <p class="simulator-disclaimer">Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. Planos promocionais podem ter parcela menor até a contemplação. Valores sujeitos a alteração, apenas simulação.</p>
+        <p class="simulator-disclaimer">Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. Para veículos, os percentuais são apenas uma referência. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. Planos promocionais podem ter parcela menor até a contemplação. Valores sujeitos a alteração, apenas simulação.</p>
         <a href="#contato" class="btn btn-primary btn-block" id="simQuero" style="margin-top:14px">Quero uma simulação com um corretor</a>
       </div>
     </div>
@@ -362,6 +399,10 @@
       <details>
         <summary>Preciso dar entrada?</summary>
         <p>Para entrar em um grupo novo, você paga a primeira parcela. Já as cartas contempladas costumam exigir uma entrada, que varia de carta para carta.</p>
+      </details>
+      <details>
+        <summary>Posso fazer consórcio de carro ou de moto?</summary>
+        <p>Sim. Além de imóveis, existem planos para veículos, com prazos mais curtos, em geral de 40 a 75 meses. As condições, as taxas e o grupo variam, e um corretor confirma tudo antes da adesão.</p>
       </details>
       <details>
         <summary>Quem administra o consórcio?</summary>
@@ -594,6 +635,25 @@
   });
 
   // ---------- Simulador (faixa de estimativa, não é oferta) ----------
+  var PRAZOS = {
+    imovel:  { lista: [120, 150, 180, 200, 240], padrao: 180, credito: 100000, min: 20000, nota: 'Imóveis: prazos de 120 a 240 meses, conforme o grupo.' },
+    veiculo: { lista: [40, 50, 60, 75],          padrao: 60,  credito: 60000,  min: 10000, nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.' }
+  };
+  function aplicaBem(bem) {
+    var c = PRAZOS[bem] || PRAZOS.imovel;
+    $('sim-bem').value = bem in PRAZOS ? bem : 'imovel';
+    $('sim-prazo').innerHTML = c.lista.map(function (m) {
+      return '<option value="' + m + '"' + (m === c.padrao ? ' selected' : '') + '>' + m + ' meses</option>';
+    }).join('');
+    $('sim-credito').min = c.min;
+    $('sim-credito').value = c.credito;
+    $('simNota').textContent = c.nota;
+    $('simResult').hidden = true;
+  }
+  $('sim-bem').addEventListener('change', function () { aplicaBem(this.value); });
+  document.querySelectorAll('[data-simbem]').forEach(function (a) {
+    a.addEventListener('click', function () { aplicaBem(a.getAttribute('data-simbem')); });
+  });
   $('simForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var credito = Number($('sim-credito').value);
@@ -606,13 +666,25 @@
     $('simTotalFaixa').textContent = brl0.format(minTotal) + ' a ' + brl0.format(maxTotal);
     $('simResult').hidden = false;
     $('simResult').dataset.credito = credito;
-    if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo });
+    $('simResult').dataset.bem = $('sim-bem').value;
+    if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo, bem: $('sim-bem').value });
   });
   $('simQuero').addEventListener('click', function () {
     var c = $('simResult').dataset.credito;
     if (c) $('c-credito').value = c;
-    $('c-tipo').value = 'imovel';
+    $('c-tipo').value = $('simResult').dataset.bem === 'veiculo' ? 'veiculo' : 'imovel';
   });
+
+  // ---------- Vindo do simulador da página inicial (?bem=veiculo&credito=60000) ----------
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var bem = q.get('bem'), cred = Number(q.get('credito'));
+    if (bem === 'veiculo' || bem === 'imovel') {
+      $('c-tipo').value = bem;
+      aplicaBem(bem);
+      if (cred > 0) { $('sim-credito').value = cred; $('c-credito').value = cred; }
+    }
+  })();
 
   // ---------- Formulário: envia para a função que grava o lead no CRM ----------
   var TIPOS = {
