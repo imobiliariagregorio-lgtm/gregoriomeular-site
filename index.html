@@ -457,7 +457,7 @@
           <label for="csim-bem">Tipo de bem</label>
           <select id="csim-bem">
             <option value="veiculo" selected>Veículo (carro ou moto)</option>
-            <option value="imovel">Imóvel</option>
+            <option value="imovel">Imóvel (plano Servopa de 240 meses)</option>
           </select>
         </div>
         <div class="form-row">
@@ -474,14 +474,15 @@
 
       <div class="simulator-result" id="csimResult" hidden>
         <div class="result-main">
-          <span class="result-label">Parcela cheia estimada, por mês</span>
+          <span class="result-label">Parcela integral estimada, por mês</span>
           <span class="csim-faixa" id="csimFaixa">-</span>
         </div>
         <div class="result-grid">
           <div><strong id="csimCredito">-</strong><span>Crédito da carta</span></div>
+          <div id="csimMetadeWrap" hidden><strong id="csimMetade">-</strong><span>Parcela 50% (plano com parcela reduzida)</span></div>
           <div><strong id="csimTotal">-</strong><span>Total pago no prazo (estimativa)</span></div>
         </div>
-        <p class="simulator-disclaimer">Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. Consórcio administrado pela Servopa. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.</p>
+        <p class="simulator-disclaimer" id="csimDisc"></p>
         <a href="/consorcios#contato" class="btn btn-primary btn-block" id="csimQuero" style="margin-top:14px">Quero uma simulação com um corretor</a>
         <a href="/consorcios" class="btn btn-outline btn-block" style="margin-top:10px">Conhecer os planos de consórcio</a>
       </div>
@@ -490,8 +491,12 @@
   <script>
   (function () {
     var CFG = {
-      veiculo: { prazos: [40, 50, 60, 75],          padrao: 60,  credito: 60000,  min: 10000, nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.' },
-      imovel:  { prazos: [120, 150, 180, 200, 240], padrao: 180, credito: 100000, min: 20000, nota: 'Imóveis: prazos de 120 a 240 meses, conforme o grupo.' }
+      veiculo: { prazos: [40, 50, 60, 75], padrao: 60, credito: 60000, min: 10000, faixa: true,
+                 nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.',
+                 disc: 'Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. Para veículos, os percentuais são apenas uma referência. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. Consórcio administrado pela Servopa. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.' },
+      imovel:  { prazos: [240], padrao: 240, credito: 100000, min: 100000, faixa: false, adm: 0.25, fundo: 0.005,
+                 nota: 'Plano Servopa de 240 meses, para créditos a partir de R$ 100 mil.',
+                 disc: 'Estimativa baseada no plano Servopa de 240 meses: taxa de administração de 25% e fundo de reserva de 0,5%, sem seguro. A parcela 50% é a metade da integral e segue as regras do plano. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.' }
     };
     var $ = function (id) { return document.getElementById(id); };
     var brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -504,6 +509,8 @@
       $('csim-credito').min = c.min;
       $('csim-credito').value = c.credito;
       $('csimNota').textContent = c.nota;
+      $('csimDisc').textContent = c.disc;
+      $('csimMetadeWrap').hidden = c.faixa;
       $('csimResult').hidden = true;
     }
     $('csim-bem').addEventListener('change', function () { aplica(this.value); });
@@ -512,10 +519,18 @@
       e.preventDefault();
       var credito = Number($('csim-credito').value), prazo = Number($('csim-prazo').value);
       if (!credito || credito <= 0 || !prazo) return;
-      var min = credito * 1.16, max = credito * 1.23;
-      $('csimFaixa').textContent = brl.format(min / prazo) + ' a ' + brl.format(max / prazo);
+      var bem = $('csim-bem').value, c = CFG[bem] || CFG.veiculo;
+      if (c.faixa) {
+        var min = credito * 1.16, max = credito * 1.23;
+        $('csimFaixa').textContent = brl.format(min / prazo) + ' a ' + brl.format(max / prazo);
+        $('csimTotal').textContent = brl0.format(min) + ' a ' + brl0.format(max);
+      } else {
+        var integral = Math.round(credito * (1 + c.adm + c.fundo) / prazo * 100) / 100;
+        $('csimFaixa').textContent = brl.format(integral);
+        $('csimMetade').textContent = brl.format(Math.round(integral / 2 * 100) / 100);
+        $('csimTotal').textContent = brl0.format(integral * prazo);
+      }
       $('csimCredito').textContent = brl0.format(credito);
-      $('csimTotal').textContent = brl0.format(min) + ' a ' + brl0.format(max);
       $('csimQuero').href = '/consorcios?bem=' + encodeURIComponent($('csim-bem').value) + '&credito=' + credito + '#contato';
       $('csimResult').hidden = false;
       if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo, bem: $('csim-bem').value, origem: 'home' });

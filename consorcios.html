@@ -71,6 +71,29 @@
   .cs-plano-parcela{font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--orange);margin:0;}
   .cs-plano-info{list-style:none;margin:14px 0 18px;padding:14px 0 0;border-top:1px solid var(--border);display:grid;gap:6px;font-size:.84rem;color:var(--gray-text);}
   .cs-plano .btn{margin-top:auto;}
+  .cs-cond{display:flex;flex-wrap:wrap;gap:8px 12px;margin:0 0 18px;}
+  .cs-cond span{background:#FFF1E4;color:var(--navy);border-radius:999px;padding:6px 14px;font-size:.82rem;font-weight:600;}
+  .cs-tabela-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:hidden;}
+  .cs-tabela{width:100%;border-collapse:collapse;font-size:.95rem;}
+  .cs-tabela th{background:var(--navy);color:var(--white);text-align:left;padding:14px 18px;font-family:var(--font-display);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;}
+  .cs-tabela td{padding:13px 18px;border-top:1px solid var(--border);}
+  .cs-tabela tbody tr:nth-child(even){background:var(--bg-alt);}
+  .cs-tabela tbody tr:hover{background:#FFF7EE;}
+  .cs-tabela .cs-t-credito{font-family:var(--font-display);font-weight:800;color:var(--navy);white-space:nowrap;}
+  .cs-tabela .cs-t-cheia{font-weight:600;white-space:nowrap;}
+  .cs-tabela .cs-t-meia{font-family:var(--font-display);font-weight:800;color:var(--orange);white-space:nowrap;}
+  .cs-tabela .btn{padding:8px 16px;font-size:.78rem;white-space:nowrap;}
+  .cs-tabela-nota{font-size:.8rem;color:var(--gray-text);margin:14px 0 0;}
+  @media (max-width:720px){
+    .cs-tabela thead{display:none;}
+    .cs-tabela,.cs-tabela tbody,.cs-tabela tr,.cs-tabela td{display:block;width:100%;}
+    .cs-tabela tr{padding:14px 16px;border-top:1px solid var(--border);}
+    .cs-tabela td{border:0;padding:4px 0;display:flex;justify-content:space-between;gap:12px;}
+    .cs-tabela td::before{content:attr(data-label);color:var(--gray-text);font-size:.8rem;font-weight:500;}
+    .cs-tabela td.cs-t-acao{display:block;padding-top:10px;}
+    .cs-tabela td.cs-t-acao::before{content:none;}
+    .cs-tabela .btn{width:100%;}
+  }
   .cs-vazio{grid-column:1/-1;background:var(--bg-alt);border:1px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;}
   .cs-vazio p{margin:0 0 14px;}
 
@@ -303,9 +326,9 @@
 <section class="section" id="planos">
   <div class="container">
     <div class="section-head">
-      <p class="eyebrow">Grupos em formação</p>
-      <h2>Planos para imóvel</h2>
-      <p>Ofertas com parcela promocional. Os valores podem mudar e são apenas uma simulação.</p>
+      <p class="eyebrow">Cartas novas</p>
+      <h2>Planos de consórcio para imóvel</h2>
+      <p>Consórcio Servopa. Escolha o crédito e veja as parcelas. Os valores podem mudar e são apenas uma simulação.</p>
     </div>
     <div class="cs-planos-grid" id="planosGrid">
       <div class="skeleton-row" data-skeleton></div>
@@ -331,32 +354,27 @@
         </div>
         <div class="form-row">
           <label for="sim-credito">Valor do crédito (R$)</label>
-          <input required type="number" id="sim-credito" min="20000" step="1000" value="100000">
+          <input required type="number" id="sim-credito" min="100000" step="1000" value="100000">
         </div>
         <div class="form-row">
           <label for="sim-prazo">Prazo (meses)</label>
-          <select id="sim-prazo">
-            <option value="120">120 meses</option>
-            <option value="150">150 meses</option>
-            <option value="180" selected>180 meses</option>
-            <option value="200">200 meses</option>
-            <option value="240">240 meses</option>
-          </select>
+          <select id="sim-prazo"></select>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Calcular parcela estimada</button>
-        <p class="cs-sim-nota" id="simNota">Imóveis: prazos de 120 a 240 meses, conforme o grupo.</p>
+        <p class="cs-sim-nota" id="simNota"></p>
       </form>
 
       <div class="simulator-result" id="simResult" hidden>
         <div class="result-main">
-          <span class="result-label">Parcela cheia estimada, por mês</span>
+          <span class="result-label">Parcela integral estimada, por mês</span>
           <span class="cs-range" id="simFaixa">-</span>
         </div>
         <div class="result-grid">
           <div><strong id="simCredito">-</strong><span>Crédito da carta</span></div>
+          <div id="simMetadeWrap"><strong id="simMetade">-</strong><span>Parcela 50% (plano com parcela reduzida)</span></div>
           <div><strong id="simTotalFaixa">-</strong><span>Total pago no prazo (estimativa)</span></div>
         </div>
-        <p class="simulator-disclaimer">Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. Para veículos, os percentuais são apenas uma referência. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. Planos promocionais podem ter parcela menor até a contemplação. Valores sujeitos a alteração, apenas simulação.</p>
+        <p class="simulator-disclaimer" id="simDisc"></p>
         <a href="#contato" class="btn btn-primary btn-block" id="simQuero" style="margin-top:14px">Quero uma simulação com um corretor</a>
       </div>
     </div>
@@ -589,22 +607,42 @@
     headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
   }).then(function (r) { return r.ok ? r.json() : []; }).then(function (planos) {
     if (!planos || !planos.length) return vazioPlanos();
-    planosGrid.innerHTML = planos.map(function (p) {
-      var prazo = (p.prazo_min_meses && p.prazo_max_meses)
-        ? '<li>Prazo de ' + esc(p.prazo_min_meses) + ' a ' + esc(p.prazo_max_meses) + ' meses, conforme o grupo</li>' : '';
-      var seg = p.segunda_parcela ? '<li>2ª parcela em ' + esc(dataCurta(p.segunda_parcela)) + '</li>' : '';
-      var val = p.validade ? '<li>Oferta válida até ' + esc(dataLonga(p.validade)) + '</li>' : '';
-      var parcela = p.parcela_promocional
-        ? '<p class="cs-plano-label">Parcela promocional</p><p class="cs-plano-parcela">' + brl.format(Number(p.parcela_promocional)) + '</p>' : '';
-      return '<article class="cs-plano">' +
-        '<p class="cs-plano-tipo">Imóvel, Consórcio Servopa</p>' +
-        '<p class="cs-plano-label">Crédito de</p>' +
-        '<p class="cs-plano-credito">' + esc(creditoCurto(p.credito)) + '</p>' +
-        parcela +
-        '<ul class="cs-plano-info">' + prazo + seg + val + '</ul>' +
-        '<button type="button" class="btn btn-primary" data-plano-credito="' + esc(p.credito) + '" data-plano-parcela="' + esc(p.parcela_promocional || '') + '">Quero este plano</button>' +
-        '</article>';
+    function pct(v) { return String(Number(v)).replace('.', ',') + '%'; }
+    function comum(campo) { // valor igual em todos os planos? senão null
+      var v = planos.map(function (p) { return p[campo]; });
+      return v.every(function (x) { return x != null && x === v[0]; }) ? v[0] : null;
+    }
+    var pMin = comum('prazo_min_meses'), pMax = comum('prazo_max_meses');
+    var taxa = comum('taxa_adm_pct'), fundo = comum('fundo_reserva_pct'), validade = comum('validade');
+    var chips = [];
+    if (pMin && pMax) chips.push('Prazo: ' + (pMin === pMax ? pMin + ' meses' : pMin + ' a ' + pMax + ' meses'));
+    if (taxa != null) chips.push('Taxa de administração: ' + pct(taxa));
+    if (fundo != null) chips.push('Fundo de reserva: ' + pct(fundo));
+    chips.push('Valores sem seguro');
+    if (validade) chips.push('Válido até ' + dataLonga(validade));
+    var temCheia = planos.some(function (p) { return p.parcela_cheia != null; });
+    var linhas = planos.map(function (p) {
+      var cheia = p.parcela_cheia != null ? brl.format(Number(p.parcela_cheia)) : '-';
+      var meia = p.parcela_promocional != null ? brl.format(Number(p.parcela_promocional)) : '-';
+      return '<tr>' +
+        '<td class="cs-t-credito" data-label="Crédito">' + esc(brl0.format(Number(p.credito))) + '</td>' +
+        (temCheia ? '<td class="cs-t-cheia" data-label="Parcela integral">' + cheia + '</td>' : '') +
+        '<td class="cs-t-meia" data-label="' + (temCheia ? 'Parcela 50%' : 'Parcela promocional') + '">' + meia + '</td>' +
+        '<td class="cs-t-acao"><button type="button" class="btn btn-primary" data-plano-credito="' + esc(p.credito) +
+          '" data-plano-cheia="' + esc(p.parcela_cheia == null ? '' : p.parcela_cheia) +
+          '" data-plano-parcela="' + esc(p.parcela_promocional == null ? '' : p.parcela_promocional) +
+          '" data-plano-prazo="' + esc(p.prazo_max_meses || '') + '">Quero este plano</button></td>' +
+        '</tr>';
     }).join('');
+    planosGrid.className = '';
+    planosGrid.innerHTML =
+      '<div class="cs-cond">' + chips.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
+      '<div class="cs-tabela-wrap"><table class="cs-tabela"><thead><tr><th>Crédito</th>' +
+      (temCheia ? '<th>Parcela integral</th><th>Parcela 50%</th>' : '<th>Parcela promocional</th>') +
+      '<th></th></tr></thead><tbody>' + linhas + '</tbody></table></div>' +
+      '<p class="cs-tabela-nota">' + (temCheia
+        ? 'A parcela 50% é o plano com parcela reduzida: as regras (até quando vale e como o saldo é tratado) constam no regulamento do plano, e um corretor confirma antes da adesão. '
+        : '') + 'Valores sujeitos a alteração, apenas simulação.</p>';
   }).catch(vazioPlanos);
 
   var planoEscolhido = '';
@@ -612,10 +650,15 @@
     var b = e.target.closest('[data-plano-credito]');
     if (!b) return;
     var credito = Number(b.getAttribute('data-plano-credito'));
+    var cheia = Number(b.getAttribute('data-plano-cheia'));
     var parcela = Number(b.getAttribute('data-plano-parcela'));
+    var prazo = Number(b.getAttribute('data-plano-prazo'));
     $('c-tipo').value = 'imovel';
     $('c-credito').value = credito || '';
-    planoEscolhido = 'Plano promocional de ' + creditoCurto(credito) + (parcela ? ', parcela promocional de ' + brl.format(parcela) : '') + '.';
+    planoEscolhido = 'Plano Servopa de ' + creditoCurto(credito) +
+      (prazo ? ', ' + prazo + ' meses' : '') +
+      (cheia ? ', parcela integral de ' + brl.format(cheia) : '') +
+      (parcela ? (cheia ? ', parcela 50% de ' : ', parcela promocional de ') + brl.format(parcela) : '') + '.';
     $('contato').scrollIntoView({ behavior: 'smooth' });
     setTimeout(function () { $('c-nome').focus({ preventScroll: true }); }, 500);
   });
@@ -636,8 +679,12 @@
 
   // ---------- Simulador (faixa de estimativa, não é oferta) ----------
   var PRAZOS = {
-    imovel:  { lista: [120, 150, 180, 200, 240], padrao: 180, credito: 100000, min: 20000, nota: 'Imóveis: prazos de 120 a 240 meses, conforme o grupo.' },
-    veiculo: { lista: [40, 50, 60, 75],          padrao: 60,  credito: 60000,  min: 10000, nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.' }
+    imovel:  { lista: [240], padrao: 240, credito: 100000, min: 100000, adm: 0.25, fundo: 0.005, faixa: false,
+               nota: 'Plano Servopa de 240 meses, para créditos a partir de R$ 100 mil.',
+               disc: 'Estimativa baseada no plano Servopa de 240 meses: taxa de administração de 25% e fundo de reserva de 0,5%, sem seguro. A parcela 50% é a metade da integral e segue as regras do plano. Valores sujeitos a alteração, apenas simulação.' },
+    veiculo: { lista: [40, 50, 60, 75], padrao: 60, credito: 60000, min: 10000, faixa: true,
+               nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.',
+               disc: 'Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. Para veículos, os percentuais são apenas uma referência. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.' }
   };
   function aplicaBem(bem) {
     var c = PRAZOS[bem] || PRAZOS.imovel;
@@ -648,26 +695,38 @@
     $('sim-credito').min = c.min;
     $('sim-credito').value = c.credito;
     $('simNota').textContent = c.nota;
+    $('simDisc').textContent = c.disc;
+    $('simMetadeWrap').hidden = c.faixa;
     $('simResult').hidden = true;
   }
   $('sim-bem').addEventListener('change', function () { aplicaBem(this.value); });
   document.querySelectorAll('[data-simbem]').forEach(function (a) {
     a.addEventListener('click', function () { aplicaBem(a.getAttribute('data-simbem')); });
   });
+  aplicaBem('imovel');
   $('simForm').addEventListener('submit', function (e) {
     e.preventDefault();
+    var bem = $('sim-bem').value, c = PRAZOS[bem] || PRAZOS.imovel;
     var credito = Number($('sim-credito').value);
     var prazo = Number($('sim-prazo').value);
     if (!credito || credito <= 0 || !prazo) return;
-    var minTotal = credito * (1 + 0.15 + 0.01);
-    var maxTotal = credito * (1 + 0.20 + 0.03);
-    $('simFaixa').textContent = brl.format(minTotal / prazo) + ' a ' + brl.format(maxTotal / prazo);
+    if (c.faixa) {
+      var minTotal = credito * (1 + 0.15 + 0.01);
+      var maxTotal = credito * (1 + 0.20 + 0.03);
+      $('simFaixa').textContent = brl.format(minTotal / prazo) + ' a ' + brl.format(maxTotal / prazo);
+      $('simTotalFaixa').textContent = brl0.format(minTotal) + ' a ' + brl0.format(maxTotal);
+    } else {
+      var total = credito * (1 + c.adm + c.fundo);
+      var integral = Math.round(total / prazo * 100) / 100;
+      $('simFaixa').textContent = brl.format(integral);
+      $('simMetade').textContent = brl.format(Math.round(integral / 2 * 100) / 100);
+      $('simTotalFaixa').textContent = brl0.format(integral * prazo);
+    }
     $('simCredito').textContent = brl0.format(credito);
-    $('simTotalFaixa').textContent = brl0.format(minTotal) + ' a ' + brl0.format(maxTotal);
     $('simResult').hidden = false;
     $('simResult').dataset.credito = credito;
-    $('simResult').dataset.bem = $('sim-bem').value;
-    if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo, bem: $('sim-bem').value });
+    $('simResult').dataset.bem = bem;
+    if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo, bem: bem });
   });
   $('simQuero').addEventListener('click', function () {
     var c = $('simResult').dataset.credito;
