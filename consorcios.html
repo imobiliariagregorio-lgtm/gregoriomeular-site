@@ -83,6 +83,42 @@
   .cs-tabela .cs-t-cheia{font-weight:600;white-space:nowrap;}
   .cs-tabela .cs-t-meia{font-family:var(--font-display);font-weight:800;color:var(--orange);white-space:nowrap;}
   .cs-tabela .btn{padding:8px 16px;font-size:.78rem;white-space:nowrap;}
+  .cs-cel{background:none;border:0;padding:6px 10px;margin:-6px -10px;border-radius:8px;font:inherit;font-weight:700;color:var(--navy);cursor:pointer;transition:background .15s,color .15s;}
+  .cs-cel:hover{background:#FFF1E4;color:var(--orange);}
+  .cs-flex{margin-top:6px;font-size:.78rem;font-weight:500;color:var(--gray-text);}
+  .cs-flex summary{cursor:pointer;color:var(--orange);font-weight:600;}
+  .cs-flex ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:2px;}
+  .cs-grupo{margin:0 0 46px;}
+  .cs-grupo h3{margin:0 0 4px;color:var(--navy);font-size:1.25rem;}
+  .cs-grupo h3 small{display:block;margin-top:2px;font-family:var(--font-body);font-weight:500;font-size:.88rem;color:var(--gray-text);}
+  .cs-pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;}
+  .cs-pill-btn{background:var(--surface);border:1px solid var(--border);color:var(--navy);border-radius:999px;padding:7px 14px;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s;font-family:var(--font-display);}
+  .cs-pill-btn:hover{border-color:var(--orange);}
+  .cs-pill-btn.is-on{background:var(--orange);border-color:var(--orange);color:var(--white);}
+  .cs-regras{margin:14px 0 0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 18px;}
+  .cs-regras summary{cursor:pointer;font-weight:700;color:var(--navy);font-family:var(--font-display);}
+  .cs-regras ul{margin:10px 0 0;padding-left:18px;font-size:.88rem;color:var(--gray-text);display:grid;gap:4px;}
+  .simulator-box > *{min-width:0;}
+  #simForm select,#simForm input{width:100%;max-width:100%;min-width:0;text-overflow:ellipsis;}
+  .cs-finder{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:26px;}
+  .cs-seg{display:inline-flex;background:var(--bg-alt);border-radius:999px;padding:4px;margin:0 0 18px;}
+  .cs-seg-btn{border:0;background:transparent;padding:9px 22px;border-radius:999px;font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--navy);cursor:pointer;}
+  .cs-seg-btn.is-on{background:var(--navy);color:var(--white);}
+  .cs-finder-row{display:grid;grid-template-columns:1fr 1fr auto;gap:14px;align-items:end;}
+  .cs-finder-row > *{min-width:0;}
+  .cs-finder-row input,.cs-finder-row select{width:100%;max-width:100%;min-width:0;text-overflow:ellipsis;}
+  .cs-res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:22px;}
+  .cs-res{position:relative;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:6px;}
+  .cs-res.is-top{border:2px solid var(--orange);box-shadow:0 14px 30px -18px rgba(245,130,32,.7);}
+  .cs-res-tag{align-self:flex-start;background:var(--orange);color:var(--white);font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:4px 10px;font-family:var(--font-display);}
+  .cs-res-credito{font-family:var(--font-display);font-weight:800;font-size:1.6rem;color:var(--navy);overflow-wrap:anywhere;}
+  .cs-res-parcela{font-weight:700;color:var(--orange);font-size:1.05rem;}
+  .cs-res small{color:var(--gray-text);font-size:.82rem;line-height:1.4;}
+  .cs-res-dica{background:#FFF1E4;border-radius:10px;padding:8px 10px;font-size:.82rem;color:var(--navy);}
+  .cs-res-acoes{display:grid;gap:8px;margin-top:auto;padding-top:10px;}
+  .cs-res-acoes .btn{width:100%;text-align:center;}
+  .cs-res-nota{font-size:.8rem;color:var(--gray-text);margin:16px 0 0;}
+  @media (max-width:720px){.cs-finder-row{grid-template-columns:1fr;}.cs-finder{padding:18px;}}
   .cs-tabela-nota{font-size:.8rem;color:var(--gray-text);margin:14px 0 0;}
   @media (max-width:720px){
     .cs-tabela thead{display:none;}
@@ -232,7 +268,7 @@
         <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFA94D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Atendimento de um corretor da Gregório | Meu Lar</span></li>
       </ul>
       <div class="cs-hero-actions">
-        <a href="#simulador" class="btn cs-btn-branco">Simule agora &rarr;</a>
+        <a href="#encontre" class="btn cs-btn-branco">Ver planos para o meu bolso &rarr;</a>
         <a href="#como-funciona" class="btn btn-outline">Como funciona</a>
       </div>
       <p class="cs-hero-nota">Consórcio administrado pela Servopa. A Gregório | Meu Lar é parceira de vendas.</p>
@@ -242,6 +278,38 @@
       <img class="cs-foto-mini" src="/assets/consorcio-veiculos.jpg" alt="Carro SUV branco em uma estrada" width="1000" height="750">
       <figcaption>Realize a compra do seu imóvel ou do seu veículo com planejamento.</figcaption>
     </figure>
+  </div>
+</section>
+
+<!-- ============ ENCONTRE O PLANO PARA O SEU BOLSO ============ -->
+<section class="section" id="encontre">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Comece por aqui</p>
+      <h2>Quanto você pode pagar por mês?</h2>
+      <p id="encontreSub">Diga o valor da parcela e mostramos os planos que cabem no seu bolso, com o maior crédito possível.</p>
+    </div>
+    <div class="cs-finder">
+      <div class="cs-seg" role="group" aria-label="Tipo de bem">
+        <button type="button" class="cs-seg-btn is-on" data-fbem="imovel">Imóvel</button>
+        <button type="button" class="cs-seg-btn" data-fbem="veiculo">Veículo</button>
+      </div>
+      <div class="cs-finder-row">
+        <div class="form-row">
+          <label for="f-parcela">Parcela mensal que cabe no seu bolso (R$)</label>
+          <input type="number" id="f-parcela" min="100" step="any" value="1500" inputmode="decimal">
+        </div>
+        <div class="form-row">
+          <label for="f-mod">Tipo de parcela</label>
+          <select id="f-mod">
+            <option value="Normal">Parcela normal</option>
+            <option value="Flex 50%">Parcela reduzida (Flex 50%), até a contemplação</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-primary" id="fBuscar">Ver planos para o meu bolso</button>
+      </div>
+      <div id="fResultado" aria-live="polite"></div>
+    </div>
   </div>
 </section>
 
@@ -310,7 +378,7 @@
       <p>Escolha o seu carro, a sua moto ou outro veículo e planeje a compra sem financiamento tradicional. Você paga parcelas mensais definidas no contrato e usa a carta de crédito depois de contemplado.</p>
       <ul class="cs-checks">
         <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Carro, moto e outros veículos, conforme as regras do plano</span></li>
-        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Prazos de 40 a 75 meses, conforme o grupo</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Prazo, taxas e seguro conforme o grupo, informados em contrato</span></li>
         <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Sem juros de financiamento: taxa de administração e fundo de reserva informados em contrato</span></li>
         <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F58220" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m8 12.5 3 3 5-6"/></svg><span>Contemplação por sorteio ou lance, sem data garantida</span></li>
       </ul>
@@ -328,11 +396,21 @@
     <div class="section-head">
       <p class="eyebrow">Cartas novas</p>
       <h2>Planos de consórcio para imóvel</h2>
-      <p>Consórcio Servopa. Escolha o crédito e veja as parcelas. Os valores podem mudar e são apenas uma simulação.</p>
+      <p>Consórcio Servopa. Cada grupo tem o seu prazo, as suas taxas e a sua data de assembleia. Escolha o crédito e a modalidade de parcela. Os valores podem mudar e são apenas uma simulação.</p>
     </div>
-    <div class="cs-planos-grid" id="planosGrid">
-      <div class="skeleton-row" data-skeleton></div>
+    <div id="planosGrid"><div class="skeleton-row" data-skeleton></div></div>
+  </div>
+</section>
+
+<!-- ============ PLANOS DE VEÍCULOS ============ -->
+<section class="section section-alt" id="planos-veiculos">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Cartas novas</p>
+      <h2>Planos de consórcio para veículos</h2>
+      <p>Consórcio Servopa. Cada grupo tem o seu prazo, as suas taxas e a sua data de assembleia. Escolha o crédito e a modalidade de parcela. Os valores podem mudar e são apenas uma simulação.</p>
     </div>
+    <div id="planosVeiculosGrid"><div class="skeleton-row" data-skeleton></div></div>
   </div>
 </section>
 
@@ -354,10 +432,10 @@
         </div>
         <div class="form-row">
           <label for="sim-credito">Valor do crédito (R$)</label>
-          <input required type="number" id="sim-credito" min="100000" step="1000" value="100000">
+          <input required type="number" id="sim-credito" min="50000" step="any" value="100000">
         </div>
-        <div class="form-row">
-          <label for="sim-prazo">Prazo (meses)</label>
+        <div class="form-row" id="simPrazoRow">
+          <label for="sim-prazo">Grupo e prazo</label>
           <select id="sim-prazo"></select>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Calcular parcela estimada</button>
@@ -371,8 +449,8 @@
         </div>
         <div class="result-grid">
           <div><strong id="simCredito">-</strong><span>Crédito da carta</span></div>
-          <div id="simMetadeWrap"><strong id="simMetade">-</strong><span>Parcela 50% (plano com parcela reduzida)</span></div>
-          <div><strong id="simTotalFaixa">-</strong><span>Total pago no prazo (estimativa)</span></div>
+          <div id="simMetadeWrap"><strong id="simMetade">-</strong><span>Parcela Flex 50% (parcela reduzida)</span></div>
+          <div id="simTotalWrap"><strong id="simTotalFaixa">-</strong><span>Total pago no prazo, sem seguro (estimativa)</span></div>
         </div>
         <p class="simulator-disclaimer" id="simDisc"></p>
         <a href="#contato" class="btn btn-primary btn-block" id="simQuero" style="margin-top:14px">Quero uma simulação com um corretor</a>
@@ -420,7 +498,11 @@
       </details>
       <details>
         <summary>Posso fazer consórcio de carro ou de moto?</summary>
-        <p>Sim. Além de imóveis, existem planos para veículos, com prazos mais curtos, em geral de 40 a 75 meses. As condições, as taxas e o grupo variam, e um corretor confirma tudo antes da adesão.</p>
+        <p>Sim. Além de imóveis, existem planos para veículos, com prazos mais curtos que os de imóvel. As condições, as taxas e o grupo variam, e um corretor confirma tudo antes da adesão.</p>
+      </details>
+      <details>
+        <summary>As parcelas mudam ao longo do tempo?</summary>
+        <p>Nos grupos de veículos da tabela, o reajuste é semestral, pelo IPCA. As regras de reajuste de cada grupo constam no contrato, e um corretor confirma antes da adesão.</p>
       </details>
       <details>
         <summary>Quem administra o consórcio?</summary>
@@ -596,71 +678,229 @@
   }).catch(function () {}).then(aplicaWhats);
   aplicaWhats();
 
-  // ---------- Planos (só os publicados e dentro da validade, pela view pública) ----------
-  var planosGrid = $('planosGrid');
-  function vazioPlanos() {
-    planosGrid.innerHTML =
-      '<div class="cs-vazio"><p>Estamos atualizando os planos disponíveis. Peça uma simulação e um corretor mostra as opções do momento.</p>' +
-      '<a href="#contato" class="btn btn-primary">Pedir simulação</a></div>';
-  }
-  fetch(SUPABASE_URL + '/rest/v1/planos_consorcio_publico?select=*&segmento=eq.imovel&order=credito.asc', {
-    headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
-  }).then(function (r) { return r.ok ? r.json() : []; }).then(function (planos) {
-    if (!planos || !planos.length) return vazioPlanos();
-    function pct(v) { return String(Number(v)).replace('.', ',') + '%'; }
-    function comum(campo) { // valor igual em todos os planos? senão null
-      var v = planos.map(function (p) { return p[campo]; });
-      return v.every(function (x) { return x != null && x === v[0]; }) ? v[0] : null;
-    }
-    var pMin = comum('prazo_min_meses'), pMax = comum('prazo_max_meses');
-    var taxa = comum('taxa_adm_pct'), fundo = comum('fundo_reserva_pct'), validade = comum('validade');
-    var chips = [];
-    if (pMin && pMax) chips.push('Prazo: ' + (pMin === pMax ? pMin + ' meses' : pMin + ' a ' + pMax + ' meses'));
-    if (taxa != null) chips.push('Taxa de administração: ' + pct(taxa));
-    if (fundo != null) chips.push('Fundo de reserva: ' + pct(fundo));
-    chips.push('Valores sem seguro');
-    if (validade) chips.push('Válido até ' + dataLonga(validade));
-    var temCheia = planos.some(function (p) { return p.parcela_cheia != null; });
-    var linhas = planos.map(function (p) {
-      var cheia = p.parcela_cheia != null ? brl.format(Number(p.parcela_cheia)) : '-';
-      var meia = p.parcela_promocional != null ? brl.format(Number(p.parcela_promocional)) : '-';
-      return '<tr>' +
-        '<td class="cs-t-credito" data-label="Crédito">' + esc(brl0.format(Number(p.credito))) + '</td>' +
-        (temCheia ? '<td class="cs-t-cheia" data-label="Parcela integral">' + cheia + '</td>' : '') +
-        '<td class="cs-t-meia" data-label="' + (temCheia ? 'Parcela 50%' : 'Parcela promocional') + '">' + meia + '</td>' +
-        '<td class="cs-t-acao"><button type="button" class="btn btn-primary" data-plano-credito="' + esc(p.credito) +
-          '" data-plano-cheia="' + esc(p.parcela_cheia == null ? '' : p.parcela_cheia) +
-          '" data-plano-parcela="' + esc(p.parcela_promocional == null ? '' : p.parcela_promocional) +
-          '" data-plano-prazo="' + esc(p.prazo_max_meses || '') + '">Quero este plano</button></td>' +
-        '</tr>';
-    }).join('');
-    planosGrid.className = '';
-    planosGrid.innerHTML =
-      '<div class="cs-cond">' + chips.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
-      '<div class="cs-tabela-wrap"><table class="cs-tabela"><thead><tr><th>Crédito</th>' +
-      (temCheia ? '<th>Parcela integral</th><th>Parcela 50%</th>' : '<th>Parcela promocional</th>') +
-      '<th></th></tr></thead><tbody>' + linhas + '</tbody></table></div>' +
-      '<p class="cs-tabela-nota">' + (temCheia
-        ? 'A parcela 50% é o plano com parcela reduzida: as regras (até quando vale e como o saldo é tratado) constam no regulamento do plano, e um corretor confirma antes da adesão. '
-        : '') + 'Valores sujeitos a alteração, apenas simulação.</p>';
-  }).catch(vazioPlanos);
-
+  // ---------- Planos por grupo (imóveis e veículos): só os publicados e dentro da validade, pela view pública ----------
   var planoEscolhido = '';
-  planosGrid.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-plano-credito]');
+  var gDados = {}, gMod = {};
+  function pctTxt(v) { return String(Number(v)).replace('.', ',') + '%'; }
+  function milhar(n) { return Number(n).toLocaleString('pt-BR'); }
+  function parcelaDe(r, mod) {
+    if (mod === 'Normal' || !r.modalidades) return Number(r.parcela_cheia);
+    var m = r.modalidades.filter(function (x) { return x.nome === mod; })[0];
+    return m ? Number(m.parcela) : Number(r.parcela_cheia);
+  }
+  function seguroTxt(r) {
+    var v = Number(r.seguro_valor);
+    if (!(v > 0)) return '-';
+    return brl.format(v) + ' por mês' + (/obrigat/i.test(r.seguro_obs || '') ? ' (obrigatório)' : ' na contemplação');
+  }
+  function corpoGrupo(g) {
+    var mod = gMod[g];
+    return gDados[g].map(function (r, i) {
+      return '<tr><td class="cs-t-credito" data-label="Crédito">' + esc(brl0.format(Number(r.credito))) + '</td>' +
+        '<td class="cs-t-meia" data-label="Parcela ' + esc(mod) + '">' + brl.format(parcelaDe(r, mod)) + '</td>' +
+        '<td data-label="Seguro">' + esc(seguroTxt(r)) + '</td>' +
+        '<td class="cs-t-acao"><button type="button" class="btn btn-primary" data-vplano="1" data-grupo="' + esc(g) + '" data-idx="' + i + '">Quero este plano</button></td></tr>';
+    }).join('');
+  }
+  function blocoGrupo(g, rows) {
+    var r0 = rows[0], flex = !!(r0.modalidades && r0.modalidades.length);
+    var cats = { moto: 'Moto', carro: 'Carro' };
+    var rotulo = cats[r0.categoria] ? cats[r0.categoria] + ' · ' : '';
+    var chips = [];
+    if (r0.prazo_min_meses) chips.push('Prazo: ' + r0.prazo_min_meses + ' meses');
+    if (r0.taxa_adm_pct != null) chips.push('Taxa de administração: ' + pctTxt(r0.taxa_adm_pct));
+    if (r0.fundo_reserva_pct != null) chips.push('Fundo de reserva: ' + pctTxt(r0.fundo_reserva_pct));
+    if (r0.participantes) chips.push(milhar(r0.participantes) + ' participantes');
+    if (r0.contemplacoes) chips.push(r0.contemplacoes + ' por assembleia');
+    if (r0.proxima_assembleia) chips.push('Próxima assembleia: ' + dataLonga(r0.proxima_assembleia));
+    if (r0.vencimento_dia) chips.push('Vencimento: dia ' + r0.vencimento_dia);
+    if (r0.data_emissao) chips.push('Tabela de ' + dataLonga(r0.data_emissao));
+    var pills = '';
+    if (flex) {
+      pills = '<div class="cs-pills" role="group" aria-label="Modalidade da parcela">' + r0.modalidades.map(function (m) {
+        return '<button type="button" class="cs-pill-btn' + (m.nome === 'Normal' ? ' is-on' : '') + '" data-vmod="' + esc(m.nome) + '" data-grupo="' + esc(g) + '">' + esc(m.nome) + '</button>';
+      }).join('') + '</div>';
+    }
+    var regras = (r0.regras && r0.regras.length)
+      ? '<details class="cs-regras"><summary>Regras do grupo</summary><ul>' + r0.regras.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></details>' : '';
+    var cred = rows.map(function (r) { return Number(r.credito); });
+    return '<article class="cs-grupo" id="grupo-' + esc(g) + '">' +
+      '<h3>' + esc(rotulo) + 'Grupo ' + esc(g) + '<small>Créditos de ' + esc(brl0.format(Math.min.apply(null, cred))) + ' a ' + esc(brl0.format(Math.max.apply(null, cred))) + '</small></h3>' +
+      '<div class="cs-cond">' + chips.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' + pills +
+      '<div class="cs-tabela-wrap"><table class="cs-tabela"><thead><tr><th>Crédito</th><th id="vth-' + esc(g) + '">Parcela Normal</th><th>Seguro</th><th></th></tr></thead>' +
+      '<tbody id="vcorpo-' + esc(g) + '"></tbody></table></div>' + regras + '</article>';
+  }
+  // opts: grid (elemento), filtro (query da view), tipo ('imovel' | 'veiculo'), nota (texto sob as tabelas)
+  function montaPlanos(opts) {
+    var grid = opts.grid;
+    function vazio() {
+      grid.innerHTML =
+        '<div class="cs-vazio"><p>Estamos atualizando os planos. Peça uma simulação e um corretor mostra as opções do momento.</p>' +
+        '<button type="button" class="btn btn-primary" data-pedir="1">Pedir simulação</button></div>';
+      grid.querySelector('[data-pedir]').addEventListener('click', function () {
+        $('c-tipo').value = opts.tipo; $('contato').scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+    var pronto = fetch(SUPABASE_URL + '/rest/v1/planos_consorcio_publico?select=*&' + opts.filtro + '&order=credito.asc', {
+      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+    }).then(function (r) { return r.ok ? r.json() : []; }).then(function (rows) {
+      if (!rows || !rows.length) return vazio();
+      var ordem = [];
+      rows.forEach(function (r) {
+        var g = r.grupo || ('c' + r.credito);
+        if (!gDados[g]) { gDados[g] = []; gMod[g] = 'Normal'; }
+        if (ordem.indexOf(g) < 0) ordem.push(g);
+        gDados[g].push(r);
+      });
+      ordem.sort(function (a, b) { return Number(gDados[a][0].credito) - Number(gDados[b][0].credito); });
+      var indice = '<div class="cs-cond" aria-label="Ir para o grupo">' + ordem.map(function (g) {
+        var c = gDados[g].map(function (r) { return Number(r.credito); });
+        return '<span><a href="#grupo-' + esc(g) + '" style="color:inherit;text-decoration:none">Grupo ' + esc(g) + ': ' + esc(creditoCurto(Math.min.apply(null, c))) + ' a ' + esc(creditoCurto(Math.max.apply(null, c))) + '</a></span>';
+      }).join('') + '</div>';
+      grid.innerHTML = indice + ordem.map(function (g) { return blocoGrupo(g, gDados[g]); }).join('') +
+        '<p class="cs-tabela-nota">' + opts.nota + ' Valores sujeitos a alteração, apenas simulação.</p>';
+      ordem.forEach(function (g) { $('vcorpo-' + g).innerHTML = corpoGrupo(g); });
+    }).catch(vazio);
+
+    grid.addEventListener('click', function (e) {
+      var pill = e.target.closest('[data-vmod]');
+      if (pill) {
+        var g = pill.getAttribute('data-grupo'), mod = pill.getAttribute('data-vmod');
+        gMod[g] = mod;
+        $('grupo-' + g).querySelectorAll('[data-vmod]').forEach(function (b) { b.classList.toggle('is-on', b === pill); });
+        $('vth-' + g).textContent = 'Parcela ' + mod;
+        $('vcorpo-' + g).innerHTML = corpoGrupo(g);
+        return;
+      }
+      var b = e.target.closest('[data-vplano]');
+      if (!b) return;
+      var gr = b.getAttribute('data-grupo'), r = gDados[gr][Number(b.getAttribute('data-idx'))], md = gMod[gr];
+      $('c-tipo').value = opts.tipo;
+      $('c-credito').value = r.credito || '';
+      planoEscolhido = 'Plano Servopa de ' + (opts.tipo === 'imovel' ? 'imóvel' : 'veículo') + ', grupo ' + gr + ' (' + (r.descricao || '') + '), ' + creditoCurto(Number(r.credito)) +
+        ', ' + r.prazo_min_meses + ' meses, parcela ' + (md === 'Normal' ? 'normal' : md) + ' de ' + brl.format(parcelaDe(r, md)) + '.';
+      $('contato').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(function () { $('c-nome').focus({ preventScroll: true }); }, 500);
+    });
+    return pronto;
+  }
+  var pIm = montaPlanos({
+    grid: $('planosGrid'), tipo: 'imovel', filtro: 'segmento=eq.imovel&categoria=eq.imovel',
+    nota: 'Parcela mensal; o seguro aparece ao lado, conforme o grupo. A parcela Flex é a opção de parcela reduzida; as regras completas constam no contrato do grupo, e um corretor confirma antes da adesão.'
+  });
+  var pVe = montaPlanos({
+    grid: $('planosVeiculosGrid'), tipo: 'veiculo', filtro: 'segmento=eq.veiculo&categoria=in.(movel,carro,moto)',
+    nota: 'Parcela mensal; o seguro de vida é obrigatório e aparece ao lado, conforme o grupo. Nos grupos de veículos o reajuste é semestral pelo IPCA. A parcela Flex é a opção de parcela reduzida até a contemplação. As regras completas constam no contrato do grupo, e um corretor confirma antes da adesão.'
+  });
+
+
+  // ---------- "Quanto você pode pagar por mês?": acha os planos que cabem no bolso ----------
+  var fBem = 'imovel';
+  function parcelaFlex(r, mod) {          // null quando o grupo não tem essa modalidade
+    if (mod === 'Normal') return Number(r.parcela_cheia);
+    var m = (r.modalidades || []).filter(function (x) { return x.nome === mod; })[0];
+    return m ? Number(m.parcela) : null;
+  }
+  function planosDoBem(bem) {
+    return Object.keys(gDados).filter(function (g) { return gDados[g][0].segmento === bem; });
+  }
+  function melhoresPlanos(bem, orcamento, mod) {
+    var achados = [];
+    planosDoBem(bem).forEach(function (g) {
+      var melhor = null;
+      gDados[g].forEach(function (r, i) {
+        var p = parcelaFlex(r, mod);
+        if (p != null && p <= orcamento + 0.0001 && (!melhor || Number(r.credito) > Number(melhor.r.credito))) melhor = { g: g, i: i, r: r, p: p };
+      });
+      if (melhor) achados.push(melhor);
+    });
+    // maior crédito primeiro; em empate de crédito, a menor parcela vem antes
+    achados.sort(function (a, b) { return (Number(b.r.credito) - Number(a.r.credito)) || (a.p - b.p); });
+    return achados;
+  }
+  function maisEmConta(bem, mod) {
+    var menor = null;
+    planosDoBem(bem).forEach(function (g) {
+      gDados[g].forEach(function (r, i) {
+        var p = parcelaFlex(r, mod);
+        if (p != null && (!menor || p < menor.p)) menor = { g: g, i: i, r: r, p: p };
+      });
+    });
+    return menor;
+  }
+  function cartaoPlano(x, mod, topo) {
+    var r = x.r, flex50 = mod === 'Normal' ? parcelaFlex(r, 'Flex 50%') : null;
+    var extra = [];
+    extra.push('Grupo ' + x.g + ' · ' + r.prazo_min_meses + ' meses');
+    if (r.taxa_adm_pct != null) extra.push('Taxa de administração ' + pctTxt(r.taxa_adm_pct));
+    var msg = 'Olá! Quero o consórcio ' + (fBem === 'imovel' ? 'de imóvel' : 'de veículo') + ' Servopa, grupo ' + x.g + ', crédito de ' + brl0.format(Number(r.credito)) +
+      ', parcela ' + (mod === 'Normal' ? 'normal' : mod) + ' de ' + brl.format(x.p) + '.';
+    return '<div class="cs-res' + (topo ? ' is-top' : '') + '">' +
+      (topo ? '<span class="cs-res-tag">Maior crédito para o seu bolso</span>' : '') +
+      '<div class="cs-res-credito">' + esc(brl0.format(Number(r.credito))) + '</div>' +
+      '<div class="cs-res-parcela">Parcela de ' + esc(brl.format(x.p)) + ' por mês' + (mod === 'Normal' ? '' : ' (' + esc(mod) + ', até a contemplação)') + '</div>' +
+      '<small>' + esc(extra.join(' · ')) + '<br>Seguro: ' + esc(seguroTxt(r)) + '</small>' +
+      (flex50 != null ? '<div class="cs-res-dica">Quer pagar menos agora? Com o Flex 50%, a parcela é de <b>' + esc(brl.format(flex50)) + '</b> até a contemplação.</div>' : '') +
+      '<div class="cs-res-acoes">' +
+        '<button type="button" class="btn btn-primary" data-fplano="1" data-grupo="' + esc(x.g) + '" data-idx="' + x.i + '" data-mod="' + esc(mod) + '">Quero este plano</button>' +
+        '<a class="btn btn-whatsapp" target="_blank" rel="noopener" href="' + esc(whatsLink(msg)) + '">Falar no WhatsApp</a>' +
+        '<a href="#grupo-' + esc(x.g) + '" style="text-align:center;font-size:.85rem;color:var(--gray-text)">Ver todas as parcelas do grupo</a>' +
+      '</div></div>';
+  }
+  function buscaPlanos() {
+    var orc = Number($('f-parcela').value), mod = $('f-mod').value, box = $('fResultado');
+    if (!(orc > 0)) { box.innerHTML = '<p class="cs-res-nota">Informe quanto você pode pagar por mês.</p>'; return; }
+    var res = melhoresPlanos(fBem, orc, mod).slice(0, 3), html;
+    if (!planosDoBem(fBem).length) {
+      html = '<p class="cs-res-nota" style="font-size:.95rem;color:var(--navy)">Estamos atualizando os planos de ' + (fBem === 'imovel' ? 'imóvel' : 'veículo') + '. Fale com um corretor e ele mostra as opções do momento.</p>' +
+        '<div class="cs-res-acoes" style="max-width:320px"><a class="btn btn-whatsapp" target="_blank" rel="noopener" href="' + esc(whatsLink('Olá! Quero uma simulação de consórcio de ' + (fBem === 'imovel' ? 'imóvel' : 'veículo') + '.')) + '">Falar no WhatsApp</a></div>';
+    } else if (res.length) {
+      html = '<div class="cs-res-grid">' + res.map(function (x, i) { return cartaoPlano(x, mod, i === 0); }).join('') + '</div>';
+    } else {
+      var menor = maisEmConta(fBem, mod);
+      html = '<p class="cs-res-nota" style="font-size:.95rem;color:var(--navy)">Com ' + esc(brl.format(orc)) + ' por mês ainda não há plano ' + (mod === 'Normal' ? 'de parcela normal' : 'com ' + esc(mod)) + ' nesta categoria.' +
+        (menor ? ' O mais em conta hoje é de <b>' + esc(brl0.format(Number(menor.r.credito))) + '</b>, com parcela de <b>' + esc(brl.format(menor.p)) + '</b>.' : '') +
+        ' Fale com um corretor para ver o que dá para fazer.</p>' +
+        (menor ? '<div class="cs-res-grid">' + cartaoPlano(menor, mod, false) + '</div>' : '');
+    }
+    box.innerHTML = html + '<p class="cs-res-nota">Simulação com base nas tabelas Servopa de 02/10/2026. Os grupos e valores mudam a cada assembleia: um corretor confirma a condição vigente. Seguro, reajuste e regras do grupo constam no contrato. A contemplação ocorre por sorteio ou lance e não tem data garantida.</p>';
+    if (typeof gtag === 'function') gtag('event', 'busca_plano_consorcio', { bem: fBem, parcela: orc, modalidade: mod, resultados: res.length });
+  }
+  document.querySelectorAll('[data-fbem]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      fBem = b.getAttribute('data-fbem');
+      document.querySelectorAll('[data-fbem]').forEach(function (x) { x.classList.toggle('is-on', x === b); });
+      $('f-parcela').value = fBem === 'imovel' ? 1500 : 800;
+      $('fResultado').innerHTML = '';
+      buscaPlanos();
+    });
+  });
+  $('fBuscar').addEventListener('click', buscaPlanos);
+  $('f-parcela').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); buscaPlanos(); } });
+  $('f-mod').addEventListener('change', buscaPlanos);
+  $('fResultado').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-fplano]');
     if (!b) return;
-    var credito = Number(b.getAttribute('data-plano-credito'));
-    var cheia = Number(b.getAttribute('data-plano-cheia'));
-    var parcela = Number(b.getAttribute('data-plano-parcela'));
-    var prazo = Number(b.getAttribute('data-plano-prazo'));
-    $('c-tipo').value = 'imovel';
-    $('c-credito').value = credito || '';
-    planoEscolhido = 'Plano Servopa de ' + creditoCurto(credito) +
-      (prazo ? ', ' + prazo + ' meses' : '') +
-      (cheia ? ', parcela integral de ' + brl.format(cheia) : '') +
-      (parcela ? (cheia ? ', parcela 50% de ' : ', parcela promocional de ') + brl.format(parcela) : '') + '.';
+    var g = b.getAttribute('data-grupo'), r = gDados[g][Number(b.getAttribute('data-idx'))], md = b.getAttribute('data-mod');
+    $('c-tipo').value = fBem;
+    $('c-credito').value = r.credito || '';
+    planoEscolhido = 'Plano Servopa de ' + (fBem === 'imovel' ? 'imóvel' : 'veículo') + ', grupo ' + g + ' (' + (r.descricao || '') + '), ' + creditoCurto(Number(r.credito)) +
+      ', ' + r.prazo_min_meses + ' meses, parcela ' + (md === 'Normal' ? 'normal' : md) + ' de ' + brl.format(parcelaFlex(r, md)) + '. Escolhido na busca por parcela mensal.';
     $('contato').scrollIntoView({ behavior: 'smooth' });
     setTimeout(function () { $('c-nome').focus({ preventScroll: true }); }, 500);
+  });
+  // com os dados carregados: frase de abertura com os números reais e primeira busca já feita
+  Promise.all([pIm, pVe]).then(function () {
+    var partes = [];
+    ['imovel', 'veiculo'].forEach(function (bem) {
+      var m = maisEmConta(bem, 'Normal'), f = maisEmConta(bem, 'Flex 50%');
+      if (m) partes.push((bem === 'imovel' ? 'imóveis' : 'veículos') + ' com parcelas a partir de ' + brl.format(m.p) + (f && m && f.p < m.p ? ' (ou ' + brl.format(f.p) + ' no Flex 50%)' : ''));
+    });
+    if (partes.length) $('encontreSub').textContent = 'Hoje temos ' + partes.join(' e ') + '. Diga quanto cabe no seu bolso e veja o maior crédito possível.';
+    if (planosDoBem('imovel').length || planosDoBem('veiculo').length) {
+      if (!planosDoBem('imovel').length) { fBem = 'veiculo'; $('f-parcela').value = 800; document.querySelectorAll('[data-fbem]').forEach(function (x) { x.classList.toggle('is-on', x.getAttribute('data-fbem') === 'veiculo'); }); }
+      buscaPlanos();
+    }
   });
 
   // ---------- Soluções: escolhem o tipo no formulário e descem até o contato ----------
@@ -678,25 +918,49 @@
   });
 
   // ---------- Simulador (faixa de estimativa, não é oferta) ----------
+  // Cada opção do simulador é um GRUPO Servopa (prazo + percentual mensal), da tabela de 02/10/2026.
   var PRAZOS = {
-    imovel:  { lista: [240], padrao: 240, credito: 100000, min: 100000, adm: 0.25, fundo: 0.005, faixa: false,
-               nota: 'Plano Servopa de 240 meses, para créditos a partir de R$ 100 mil.',
-               disc: 'Estimativa baseada no plano Servopa de 240 meses: taxa de administração de 25% e fundo de reserva de 0,5%, sem seguro. A parcela 50% é a metade da integral e segue as regras do plano. Valores sujeitos a alteração, apenas simulação.' },
-    veiculo: { lista: [40, 50, 60, 75], padrao: 60, credito: 60000, min: 10000, faixa: true,
-               nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.',
-               disc: 'Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. Para veículos, os percentuais são apenas uma referência. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.' }
+    imovel: {
+      opcoes: [
+        { prazo: 238, pct: 0.5273, rotulo: '238 meses · grupos 1577 e 1578 (R$ 80 mil a R$ 150 mil)' },
+        { prazo: 236, pct: 0.5318, rotulo: '236 meses · grupos 1574 e 1575 (R$ 110 mil a R$ 220 mil)' },
+        { prazo: 228, pct: 0.5504, rotulo: '228 meses · grupo 1567 (R$ 112 mil a R$ 153 mil)' },
+        { prazo: 225, pct: 0.5578, rotulo: '225 meses · grupo 1563 (R$ 117 mil a R$ 160 mil)' },
+        { prazo: 239, pct: 0.5251, rotulo: '239 meses · grupo 1576 (R$ 250 mil a R$ 320 mil)' },
+        { prazo: 235, pct: 0.5340, rotulo: '235 meses · grupo 1572 (R$ 400 mil a R$ 500 mil)' },
+        { prazo: 206, pct: 0.5898, rotulo: '206 meses · grupo 1553 (R$ 467 mil a R$ 583 mil)' },
+        { prazo: 194, pct: 0.6263, rotulo: '194 meses · grupo 1547 (R$ 482 mil a R$ 603 mil)' },
+        { prazo: 182, pct: 0.6676, rotulo: '182 meses · grupo 1542 (R$ 528 mil a R$ 660 mil)' },
+        { prazo: 225, pct: 0.5533, rotulo: '225 meses · grupo 1564 (R$ 1,07 mi a R$ 1,6 mi)' }
+      ],
+      padrao: 0, credito: 100000, min: 50000,
+      nota: 'Cada opção é um grupo Servopa, com faixa de crédito própria: veja a tabela de planos de imóveis.',
+      disc: 'Estimativa com base nos grupos Servopa de imóveis (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito, sem seguro. Taxas, seguro e regras variam conforme o grupo e constam no contrato. As modalidades Flex (parcela reduzida) estão na tabela de planos. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.'
+    },
+    veiculo: {
+      opcoes: [
+        { prazo: 45, pct: 2.5444, rotulo: '45 meses · grupo 3110 (R$ 11 mil a R$ 23 mil)' },
+        { prazo: 58, pct: 1.9655, rotulo: '58 meses · grupo 3113 (R$ 11 mil a R$ 22 mil)' },
+        { prazo: 46, pct: 2.4674, rotulo: '46 meses · grupos 3305 e 3412 (R$ 38 mil a R$ 88 mil)', flex: true },
+        { prazo: 109, pct: 1.0734, rotulo: '109 meses · grupo 4113 (R$ 124 mil a R$ 248 mil)' },
+        { prazo: 86, pct: 1.3256, rotulo: '86 meses · grupo 3706 (R$ 159 mil a R$ 204 mil)', flex: true }
+      ],
+      padrao: 2, credito: 40000, min: 10000,
+      nota: 'Cada opção é um grupo Servopa, com faixa de crédito própria: veja a tabela de planos de veículos.',
+      disc: 'Estimativa com base nos grupos Servopa de veículos (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito. Não inclui o seguro de vida obrigatório nem o reajuste semestral pelo IPCA. A parcela Flex 50% (grupos de 46 e 86 meses) vale até a contemplação, conforme o regulamento. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.'
+    }
   };
   function aplicaBem(bem) {
     var c = PRAZOS[bem] || PRAZOS.imovel;
     $('sim-bem').value = bem in PRAZOS ? bem : 'imovel';
-    $('sim-prazo').innerHTML = c.lista.map(function (m) {
-      return '<option value="' + m + '"' + (m === c.padrao ? ' selected' : '') + '>' + m + ' meses</option>';
+    $('sim-prazo').innerHTML = c.opcoes.map(function (o, i) {
+      return '<option value="' + i + '"' + (i === c.padrao ? ' selected' : '') + '>' + o.rotulo + '</option>';
     }).join('');
     $('sim-credito').min = c.min;
     $('sim-credito').value = c.credito;
     $('simNota').textContent = c.nota;
     $('simDisc').textContent = c.disc;
-    $('simMetadeWrap').hidden = c.faixa;
+    $('simMetadeWrap').hidden = true;
     $('simResult').hidden = true;
   }
   $('sim-bem').addEventListener('change', function () { aplicaBem(this.value); });
@@ -708,25 +972,20 @@
     e.preventDefault();
     var bem = $('sim-bem').value, c = PRAZOS[bem] || PRAZOS.imovel;
     var credito = Number($('sim-credito').value);
-    var prazo = Number($('sim-prazo').value);
-    if (!credito || credito <= 0 || !prazo) return;
-    if (c.faixa) {
-      var minTotal = credito * (1 + 0.15 + 0.01);
-      var maxTotal = credito * (1 + 0.20 + 0.03);
-      $('simFaixa').textContent = brl.format(minTotal / prazo) + ' a ' + brl.format(maxTotal / prazo);
-      $('simTotalFaixa').textContent = brl0.format(minTotal) + ' a ' + brl0.format(maxTotal);
-    } else {
-      var total = credito * (1 + c.adm + c.fundo);
-      var integral = Math.round(total / prazo * 100) / 100;
-      $('simFaixa').textContent = brl.format(integral);
-      $('simMetade').textContent = brl.format(Math.round(integral / 2 * 100) / 100);
-      $('simTotalFaixa').textContent = brl0.format(integral * prazo);
-    }
+    var op = c.opcoes[Number($('sim-prazo').value)];
+    if (!credito || credito <= 0 || !op) return;
+    // A Servopa corta os centavos (não arredonda) nas parcelas
+    var centavos = Math.floor(credito * op.pct + 1e-6);
+    var parcela = centavos / 100;
+    $('simFaixa').textContent = brl.format(parcela);
+    $('simTotalFaixa').textContent = brl0.format(parcela * op.prazo);
+    $('simMetadeWrap').hidden = !op.flex;
+    if (op.flex) $('simMetade').textContent = brl.format(Math.floor(centavos / 2) / 100);
     $('simCredito').textContent = brl0.format(credito);
     $('simResult').hidden = false;
     $('simResult').dataset.credito = credito;
     $('simResult').dataset.bem = bem;
-    if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo, bem: bem });
+    if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: op.prazo, bem: bem });
   });
   $('simQuero').addEventListener('click', function () {
     var c = $('simResult').dataset.credito;
