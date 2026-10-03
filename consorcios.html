@@ -119,6 +119,7 @@
   .cs-res-acoes .btn{width:100%;text-align:center;}
   .cs-res-nota{font-size:.8rem;color:var(--gray-text);margin:16px 0 0;}
   @media (max-width:720px){.cs-finder-row{grid-template-columns:1fr;}.cs-finder{padding:18px;}}
+  .cs-aviso-vagas{background:#FFF7EE;border:1px solid #FBD5AE;border-left:4px solid var(--orange);border-radius:10px;padding:12px 16px;margin:0 0 22px;font-size:.92rem;color:var(--navy);line-height:1.5;}
   .cs-tabela-nota{font-size:.8rem;color:var(--gray-text);margin:14px 0 0;}
   @media (max-width:720px){
     .cs-tabela thead{display:none;}
@@ -398,6 +399,7 @@
       <h2>Planos de consórcio para imóvel</h2>
       <p>Consórcio Servopa. Cada grupo tem o seu prazo, as suas taxas e a sua data de assembleia. Escolha o crédito e a modalidade de parcela. Os valores podem mudar e são apenas uma simulação.</p>
     </div>
+    <div class="cs-aviso-vagas" role="note"><strong>Importante:</strong> os valores podem sofrer alterações e dependem da disponibilidade de vagas em cada grupo. Um corretor confirma a condição vigente antes da adesão.</div>
     <div id="planosGrid"><div class="skeleton-row" data-skeleton></div></div>
   </div>
 </section>
@@ -410,6 +412,7 @@
       <h2>Planos de consórcio para veículos</h2>
       <p>Consórcio Servopa. Cada grupo tem o seu prazo, as suas taxas e a sua data de assembleia. Escolha o crédito e a modalidade de parcela. Os valores podem mudar e são apenas uma simulação.</p>
     </div>
+    <div class="cs-aviso-vagas" role="note"><strong>Importante:</strong> os valores podem sofrer alterações e dependem da disponibilidade de vagas em cada grupo. Um corretor confirma a condição vigente antes da adesão.</div>
     <div id="planosVeiculosGrid"><div class="skeleton-row" data-skeleton></div></div>
   </div>
 </section>
@@ -712,7 +715,8 @@
     if (r0.fundo_reserva_pct != null) chips.push('Fundo de reserva: ' + pctTxt(r0.fundo_reserva_pct));
     if (r0.participantes) chips.push(milhar(r0.participantes) + ' participantes');
     if (r0.contemplacoes) chips.push(r0.contemplacoes + ' por assembleia');
-    if (r0.proxima_assembleia) chips.push('Próxima assembleia: ' + dataLonga(r0.proxima_assembleia));
+    var hoje = new Date(); hoje = hoje.getFullYear() + '-' + String(hoje.getMonth() + 1).padStart(2, '0') + '-' + String(hoje.getDate()).padStart(2, '0');
+    if (r0.proxima_assembleia && r0.proxima_assembleia >= hoje) chips.push('Próxima assembleia: ' + dataLonga(r0.proxima_assembleia));
     if (r0.vencimento_dia) chips.push('Vencimento: dia ' + r0.vencimento_dia);
     if (r0.data_emissao) chips.push('Tabela de ' + dataLonga(r0.data_emissao));
     var pills = '';
@@ -758,7 +762,7 @@
         return '<span><a href="#grupo-' + esc(g) + '" style="color:inherit;text-decoration:none">Grupo ' + esc(g) + ': ' + esc(creditoCurto(Math.min.apply(null, c))) + ' a ' + esc(creditoCurto(Math.max.apply(null, c))) + '</a></span>';
       }).join('') + '</div>';
       grid.innerHTML = indice + ordem.map(function (g) { return blocoGrupo(g, gDados[g]); }).join('') +
-        '<p class="cs-tabela-nota">' + opts.nota + ' Valores sujeitos a alteração, apenas simulação.</p>';
+        '<p class="cs-tabela-nota">' + opts.nota + ' Os valores podem sofrer alterações e dependem da disponibilidade de vagas no grupo. Apenas simulação.</p>';
       ordem.forEach(function (g) { $('vcorpo-' + g).innerHTML = corpoGrupo(g); });
     }).catch(vazio);
 
@@ -863,7 +867,7 @@
         ' Fale com um corretor para ver o que dá para fazer.</p>' +
         (menor ? '<div class="cs-res-grid">' + cartaoPlano(menor, mod, false) + '</div>' : '');
     }
-    box.innerHTML = html + '<p class="cs-res-nota">Simulação com base nas tabelas Servopa de 02/10/2026. Os grupos e valores mudam a cada assembleia: um corretor confirma a condição vigente. Seguro, reajuste e regras do grupo constam no contrato. A contemplação ocorre por sorteio ou lance e não tem data garantida.</p>';
+    box.innerHTML = html + '<p class="cs-res-nota">Simulação com base nas tabelas Servopa de 02/10/2026. Os valores podem sofrer alterações e dependem da disponibilidade de vagas em cada grupo: um corretor confirma a condição vigente. Seguro, reajuste e regras do grupo constam no contrato. A contemplação ocorre por sorteio ou lance e não tem data garantida.</p>';
     if (typeof gtag === 'function') gtag('event', 'busca_plano_consorcio', { bem: fBem, parcela: orc, modalidade: mod, resultados: res.length });
   }
   document.querySelectorAll('[data-fbem]').forEach(function (b) {
@@ -935,7 +939,7 @@
       ],
       padrao: 0, credito: 100000, min: 50000,
       nota: 'Cada opção é um grupo Servopa, com faixa de crédito própria: veja a tabela de planos de imóveis.',
-      disc: 'Estimativa com base nos grupos Servopa de imóveis (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito, sem seguro. Taxas, seguro e regras variam conforme o grupo e constam no contrato. As modalidades Flex (parcela reduzida) estão na tabela de planos. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.'
+      disc: 'Estimativa com base nos grupos Servopa de imóveis (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito, sem seguro. Taxas, seguro e regras variam conforme o grupo e constam no contrato. As modalidades Flex (parcela reduzida) estão na tabela de planos. A contemplação ocorre por sorteio ou lance e não tem data garantida. Os valores podem sofrer alterações e dependem da disponibilidade de vagas no grupo. Apenas simulação.'
     },
     veiculo: {
       opcoes: [
@@ -947,7 +951,7 @@
       ],
       padrao: 2, credito: 40000, min: 10000,
       nota: 'Cada opção é um grupo Servopa, com faixa de crédito própria: veja a tabela de planos de veículos.',
-      disc: 'Estimativa com base nos grupos Servopa de veículos (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito. Não inclui o seguro de vida obrigatório nem o reajuste semestral pelo IPCA. A parcela Flex 50% (grupos de 46 e 86 meses) vale até a contemplação, conforme o regulamento. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.'
+      disc: 'Estimativa com base nos grupos Servopa de veículos (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito. Não inclui o seguro de vida obrigatório nem o reajuste semestral pelo IPCA. A parcela Flex 50% (grupos de 46 e 86 meses) vale até a contemplação, conforme o regulamento. A contemplação ocorre por sorteio ou lance e não tem data garantida. Os valores podem sofrer alterações e dependem da disponibilidade de vagas no grupo. Apenas simulação.'
     }
   };
   function aplicaBem(bem) {

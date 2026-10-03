@@ -443,6 +443,7 @@
     #simulador-consorcio .csim-faixa{font-family:var(--font-display);font-size:1.7rem;font-weight:800;color:var(--orange);overflow-wrap:anywhere;}
     #simulador-consorcio .csim-nota{font-size:.78rem;color:var(--gray-text);margin:0;}
     #simulador-consorcio .simulator-box > *{min-width:0;}
+    #simulador-consorcio select,#simulador-consorcio input{width:100%;max-width:100%;min-width:0;text-overflow:ellipsis;}
     @media (max-width:560px){#simulador-consorcio .csim-faixa{font-size:1.3rem;}}
   </style>
   <div class="container">
@@ -457,15 +458,15 @@
           <label for="csim-bem">Tipo de bem</label>
           <select id="csim-bem">
             <option value="veiculo" selected>Veículo (carro ou moto)</option>
-            <option value="imovel">Imóvel (plano Servopa de 240 meses)</option>
+            <option value="imovel">Imóvel</option>
           </select>
         </div>
         <div class="form-row">
           <label for="csim-credito">Valor do crédito (R$)</label>
-          <input required type="number" id="csim-credito" min="10000" step="1000" value="60000">
+          <input required type="number" id="csim-credito" min="10000" step="any" value="60000">
         </div>
-        <div class="form-row">
-          <label for="csim-prazo">Prazo (meses)</label>
+        <div class="form-row" id="csimPrazoRow">
+          <label for="csim-prazo">Grupo e prazo</label>
           <select id="csim-prazo"></select>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Calcular parcela estimada</button>
@@ -479,8 +480,8 @@
         </div>
         <div class="result-grid">
           <div><strong id="csimCredito">-</strong><span>Crédito da carta</span></div>
-          <div id="csimMetadeWrap" hidden><strong id="csimMetade">-</strong><span>Parcela 50% (plano com parcela reduzida)</span></div>
-          <div><strong id="csimTotal">-</strong><span>Total pago no prazo (estimativa)</span></div>
+          <div id="csimMetadeWrap" hidden><strong id="csimMetade">-</strong><span>Parcela Flex 50% (parcela reduzida)</span></div>
+          <div id="csimTotalWrap"><strong id="csimTotal">-</strong><span>Total pago no prazo, sem seguro (estimativa)</span></div>
         </div>
         <p class="simulator-disclaimer" id="csimDisc"></p>
         <a href="/consorcios#contato" class="btn btn-primary btn-block" id="csimQuero" style="margin-top:14px">Quero uma simulação com um corretor</a>
@@ -490,50 +491,72 @@
   </div>
   <script>
   (function () {
+    // Cada opção é um GRUPO Servopa (prazo + percentual mensal), da tabela de 02/10/2026.
     var CFG = {
-      veiculo: { prazos: [40, 50, 60, 75], padrao: 60, credito: 60000, min: 10000, faixa: true,
-                 nota: 'Veículos: prazos de 40 a 75 meses, conforme o grupo.',
-                 disc: 'Estimativa com taxa de administração de 15% a 20% e fundo de reserva de 1% a 3%, sem seguro. Para veículos, os percentuais são apenas uma referência. A taxa real, o fundo de reserva e o seguro dependem do grupo e do contrato. Consórcio administrado pela Servopa. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.' },
-      imovel:  { prazos: [240], padrao: 240, credito: 100000, min: 100000, faixa: false, adm: 0.25, fundo: 0.005,
-                 nota: 'Plano Servopa de 240 meses, para créditos a partir de R$ 100 mil.',
-                 disc: 'Estimativa baseada no plano Servopa de 240 meses: taxa de administração de 25% e fundo de reserva de 0,5%, sem seguro. A parcela 50% é a metade da integral e segue as regras do plano. A contemplação ocorre por sorteio ou lance e não tem data garantida. Valores sujeitos a alteração, apenas simulação.' }
+      veiculo: {
+        opcoes: [
+          { prazo: 45, pct: 2.5444, rotulo: '45 meses · grupo 3110 (R$ 11 mil a R$ 23 mil)' },
+          { prazo: 58, pct: 1.9655, rotulo: '58 meses · grupo 3113 (R$ 11 mil a R$ 22 mil)' },
+          { prazo: 46, pct: 2.4674, rotulo: '46 meses · grupos 3305 e 3412 (R$ 38 mil a R$ 88 mil)', flex: true },
+          { prazo: 109, pct: 1.0734, rotulo: '109 meses · grupo 4113 (R$ 124 mil a R$ 248 mil)' },
+          { prazo: 86, pct: 1.3256, rotulo: '86 meses · grupo 3706 (R$ 159 mil a R$ 204 mil)', flex: true }
+        ],
+        padrao: 2, credito: 40000, min: 10000,
+        nota: 'Cada opção é um grupo Servopa, com faixa de crédito própria.',
+        disc: 'Estimativa com base nos grupos Servopa de veículos (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito. Não inclui o seguro de vida obrigatório nem o reajuste semestral pelo IPCA. A parcela Flex 50% (grupos de 46 e 86 meses) vale até a contemplação, conforme o regulamento. A contemplação ocorre por sorteio ou lance e não tem data garantida. Os valores podem sofrer alterações e dependem da disponibilidade de vagas no grupo. Apenas simulação.'
+      },
+      imovel: {
+        opcoes: [
+          { prazo: 238, pct: 0.5273, rotulo: '238 meses · grupos 1577 e 1578 (R$ 80 mil a R$ 150 mil)' },
+          { prazo: 236, pct: 0.5318, rotulo: '236 meses · grupos 1574 e 1575 (R$ 110 mil a R$ 220 mil)' },
+          { prazo: 228, pct: 0.5504, rotulo: '228 meses · grupo 1567 (R$ 112 mil a R$ 153 mil)' },
+          { prazo: 225, pct: 0.5578, rotulo: '225 meses · grupo 1563 (R$ 117 mil a R$ 160 mil)' },
+          { prazo: 239, pct: 0.5251, rotulo: '239 meses · grupo 1576 (R$ 250 mil a R$ 320 mil)' },
+          { prazo: 235, pct: 0.5340, rotulo: '235 meses · grupo 1572 (R$ 400 mil a R$ 500 mil)' },
+          { prazo: 206, pct: 0.5898, rotulo: '206 meses · grupo 1553 (R$ 467 mil a R$ 583 mil)' },
+          { prazo: 194, pct: 0.6263, rotulo: '194 meses · grupo 1547 (R$ 482 mil a R$ 603 mil)' },
+          { prazo: 182, pct: 0.6676, rotulo: '182 meses · grupo 1542 (R$ 528 mil a R$ 660 mil)' },
+          { prazo: 225, pct: 0.5533, rotulo: '225 meses · grupo 1564 (R$ 1,07 mi a R$ 1,6 mi)' }
+        ],
+        padrao: 0, credito: 100000, min: 50000,
+        nota: 'Cada opção é um grupo Servopa, com faixa de crédito própria.',
+        disc: 'Estimativa com base nos grupos Servopa de imóveis (tabela de 02/10/2026): parcela = percentual mensal do grupo × crédito, sem seguro. Taxas, seguro e regras variam conforme o grupo e constam no contrato. As modalidades Flex (parcela reduzida) estão na tabela de planos. A contemplação ocorre por sorteio ou lance e não tem data garantida. Os valores podem sofrer alterações e dependem da disponibilidade de vagas no grupo. Apenas simulação.'
+      }
     };
     var $ = function (id) { return document.getElementById(id); };
     var brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
     var brl0 = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
     function aplica(bem) {
       var c = CFG[bem] || CFG.veiculo;
-      $('csim-prazo').innerHTML = c.prazos.map(function (m) {
-        return '<option value="' + m + '"' + (m === c.padrao ? ' selected' : '') + '>' + m + ' meses</option>';
+      $('csim-prazo').innerHTML = c.opcoes.map(function (o, i) {
+        return '<option value="' + i + '"' + (i === c.padrao ? ' selected' : '') + '>' + o.rotulo + '</option>';
       }).join('');
       $('csim-credito').min = c.min;
       $('csim-credito').value = c.credito;
       $('csimNota').textContent = c.nota;
       $('csimDisc').textContent = c.disc;
-      $('csimMetadeWrap').hidden = c.faixa;
+      $('csimMetadeWrap').hidden = true;
       $('csimResult').hidden = true;
     }
     $('csim-bem').addEventListener('change', function () { aplica(this.value); });
     aplica('veiculo');
     $('csimForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      var credito = Number($('csim-credito').value), prazo = Number($('csim-prazo').value);
-      if (!credito || credito <= 0 || !prazo) return;
       var bem = $('csim-bem').value, c = CFG[bem] || CFG.veiculo;
-      if (c.faixa) {
-        var min = credito * 1.16, max = credito * 1.23;
-        $('csimFaixa').textContent = brl.format(min / prazo) + ' a ' + brl.format(max / prazo);
-        $('csimTotal').textContent = brl0.format(min) + ' a ' + brl0.format(max);
-      } else {
-        var integral = Math.round(credito * (1 + c.adm + c.fundo) / prazo * 100) / 100;
-        $('csimFaixa').textContent = brl.format(integral);
-        $('csimMetade').textContent = brl.format(Math.round(integral / 2 * 100) / 100);
-        $('csimTotal').textContent = brl0.format(integral * prazo);
-      }
+      var credito = Number($('csim-credito').value);
+      var op = c.opcoes[Number($('csim-prazo').value)];
+      if (!credito || credito <= 0 || !op) return;
+      // A Servopa corta os centavos (não arredonda) nas parcelas
+      var centavos = Math.floor(credito * op.pct + 1e-6);
+      var parcela = centavos / 100;
+      $('csimFaixa').textContent = brl.format(parcela);
+      $('csimTotal').textContent = brl0.format(parcela * op.prazo);
+      $('csimMetadeWrap').hidden = !op.flex;
+      if (op.flex) $('csimMetade').textContent = brl.format(Math.floor(centavos / 2) / 100);
       $('csimCredito').textContent = brl0.format(credito);
-      $('csimQuero').href = '/consorcios?bem=' + encodeURIComponent($('csim-bem').value) + '&credito=' + credito + '#contato';
+      $('csimQuero').href = '/consorcios?bem=' + encodeURIComponent(bem) + '&credito=' + credito + '#contato';
       $('csimResult').hidden = false;
-      if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: prazo, bem: $('csim-bem').value, origem: 'home' });
+      if (typeof gtag === 'function') gtag('event', 'simulacao_consorcio', { credito: credito, prazo: op.prazo, bem: bem, origem: 'home' });
     });
   })();
   </script>
