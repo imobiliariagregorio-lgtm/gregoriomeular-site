@@ -1040,7 +1040,7 @@
     var nome = $('c-nome').value.trim();
     var tel = $('c-telefone').value.replace(/\D/g, '');
     if (!nome) return feedback('Informe seu nome.', false);
-    if (tel.length < 10 || tel.length > 13) return feedback('Informe um telefone com DDD, por exemplo (41) 90000-0000.', false);
+    if (tel.length < 8 || tel.length > 15) return feedback('Informe um telefone válido, com DDD (Brasil) ou código do país (ex: (41) 90000-0000 ou +1 555 123 4567).', false);
 
     var t = TIPOS[$('c-tipo').value] || TIPOS.imovel;
     var obs = [planoEscolhido, $('c-obs').value.trim()].filter(Boolean).join(' | ');
